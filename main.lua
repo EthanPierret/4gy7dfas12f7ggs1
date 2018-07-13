@@ -23,14 +23,14 @@ function love.mousepressed(x, y, button, touch)
     
     if (x > maincat.p.body:getX()) then
       maincat.p.body:applyLinearImpulse(5,0)
-      maincat.p.body:applyAngularImpulse(1)
+      maincat.p.body:applyAngularImpulse(2)
       holding = 1
     else
       maincat.p.body:applyLinearImpulse(-5,0)
-      maincat.p.body:applyTorque(-1)
+      maincat.p.body:applyTorque(-2)
       holding = 2
     end
-    
+    love.graphics.setColor(0,0,0,255)
   end
   
   function love.mousereleased(x, y, button, touch)
@@ -39,12 +39,20 @@ function love.mousepressed(x, y, button, touch)
     
   end
 
+
+function begincontact ()
+
+
+end
+
+
+
 -- Draw
 function love.draw()
   --[[Centered Image]]--
   love.graphics.draw(image, actframe, imagex, imagey)
   --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
-  love.graphics.draw(image, 300, 300, math.rad(30),0.5, 0.5, halfw, halfh)
+  love.graphics.draw(image, 500, 400, math.rad(30),0.5, 0.5, halfw, halfh)
   
   --[[love.graphics.setColor(0,0,0,255)]]--
   love.graphics.print("Hello World",50,50)
@@ -64,10 +72,10 @@ function love.update(dt)
   
   if (holding == 1) then
     maincat.p.body:applyLinearImpulse(5,0)
-    maincat.p.body:applyAngularImpulse(1)
+    maincat.p.body:applyAngularImpulse(2)
   elseif (holding == 2) then
     maincat.p.body:applyLinearImpulse(-5,0)
-    maincat.p.body:applyAngularImpulse(-1)
+    maincat.p.body:applyAngularImpulse(-2)
   end   
   
   if ( pos < love.graphics.getWidth() and elapsed > 0.05) then
@@ -84,12 +92,15 @@ function love.update(dt)
   
   end
   world:update(dt)
+  maincat.collide()
+  
   --[[ keep at or under 2048 X 2048]]--
 
 end
 
 -- Load
 function love.load()
+  love.graphics.setDefaultFilter("nearest","nearest")
   love.graphics.setBackgroundColor(255,255,255,255)
   image = love.graphics.newImage("test.png")
   frames[1] = love.graphics.newQuad(0,0,128,128, image:getDimensions())
@@ -102,16 +113,42 @@ function love.load()
   imagey = halfh - ({actframe:getViewport()})[4]/2
   
   world = love.physics.newWorld(0,9.8*64, true)
+  world:setCallbacks(beginContact, endContact, preSolve, postSolve)
   maincat = cat.new(100, 0, 25, world)
   local floor = {}
   floor.body = love.physics.newBody(world ,love.graphics.getWidth()/2,love.graphics.getHeight())
   floor.shape = love.physics.newRectangleShape(love.graphics.getWidth(), 2)
   floor.prop = love.physics.newFixture(floor.body,floor.shape)
-  floor.prop:setRestitution(0.9)
+  -- bouncy
+  floor.prop:setRestitution(0)
   maincat.p.body:setFixedRotation(false)
+  
+  
+  
 
 end
 
+
+
+
+
+
 function love.quit()
   love.event.quit()
+end
+
+function beginContact(a, b, coll)
+
+end
+ 
+function endContact(a, b, coll)
+ 
+end
+ 
+function preSolve(a, b, coll)
+ 
+end
+ 
+function postSolve(a, b, coll, normalimpulse, tangentimpulse)
+ 
 end
