@@ -13,6 +13,27 @@ return {
 			items = {},
 			selected = 1,
 			animOffset = 0,
+			loaded = false,
+			load = function(self)
+				self.count = 0
+						for _ in pairs(self.items) do
+					  	self.count = self.count + 1
+						end
+
+				self.loaded = true
+			end,
+			mousepressed = function(self, xt, yt)
+				if (xt ~= nil and yt ~= nil) then
+				if (xt >= self.x and xt <= (self.x+self.width)) then
+					if (yt >= self.y and yt <= (self.y+self.height*self.count)) then
+						self.selected = math.floor((yt-self.y)/self.height)+1
+						self.items[self.selected]:action()
+
+					end
+				end
+				end
+
+			end,
 			addItem = function(self, item)
 				table.insert(self.items, item)
 			end,
@@ -20,6 +41,11 @@ return {
 				self.animOffset = self.animOffset / (1 + dt*10)
 			end,
 			draw = function(self, x, y, w, h, f)
+				self.x = x
+				self.y = y
+				self.width = w
+				self.height = h
+				self.fontsize = f
 		
 				local width, height, fontsize = w, h, f
 				
@@ -57,8 +83,10 @@ return {
 					if self.items[self.selected].action then
 						self.items[self.selected]:action()
 					end
+
 				end
 			end
 		}
+
 	end
 }

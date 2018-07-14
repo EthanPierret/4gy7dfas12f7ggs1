@@ -37,6 +37,8 @@ function love.mousepressed(x, y, button, touch)
       maincat.p.body:applyTorque(-2)
       holding = 2
     end
+  else
+    mainmenu:mousepressed(x,y)
   end
   
   function love.mousereleased(x, y, button, touch)
@@ -170,7 +172,7 @@ function love.load()
 	}
 
   
-  
+  mainmenu:load()
   
 
 end
