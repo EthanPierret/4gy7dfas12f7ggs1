@@ -24,12 +24,12 @@ cat.new = function(x, y, rad, physics)
 
   
 
-  --self.p.rectp:setSensor(true)
+  self.p.rectp:setSensor(true)
   --self.p.rectp:setDensity(0)
   --self.p.body:setMassData(x , y, 1, math.rad(-350))
   --self.p.body:setMass(0)
  --self.p.body:setFixedRotation(false)
-  self.p.body:setGravityScale(1)
+  self.p.body:setGravityScale(0)
   
   bx, by, mass, intertia = self.p.body:getMassData()
 
@@ -38,18 +38,15 @@ cat.new = function(x, y, rad, physics)
       if contacts ~= nil then
 
    
-        local printout = {}
-        love.graphics.print(contacts[1],100, 25)
-        for i, l in ipairs(contacts) do
         --local printie = contacts[l]:getFixtureList()
         --local printie2 = printie:getDensity()
 
         --love.graphics.print(contacts[printie2],100, 25)
       
-      end
+      
       end
   
-      love.graphics.print(contacts)
+     -- love.graphics.print(contacts)
     end
     
     self.draw = function () -- Draw

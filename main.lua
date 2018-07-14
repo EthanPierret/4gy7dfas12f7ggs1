@@ -1,4 +1,6 @@
 require("assets.cat")
+require("assets.map")
+local menu =  require("assets.menu")
 
 pos = 0
 local image
@@ -14,11 +16,16 @@ local world
 local maincat
 
 local holding
+local gameactive = false
+local fullscreen = false
+local menuw = 300
+local menuh = 40
+
 --[[]]--
 
 -- Mouse
 function love.mousepressed(x, y, button, touch)
-    
+    if gameactive == true then
     love.graphics.print(tostring(x), 0, 0)
     
     if (x > maincat.p.body:getX()) then
@@ -30,7 +37,6 @@ function love.mousepressed(x, y, button, touch)
       maincat.p.body:applyTorque(-2)
       holding = 2
     end
-    love.graphics.setColor(0,0,0,255)
   end
   
   function love.mousereleased(x, y, button, touch)
@@ -38,7 +44,13 @@ function love.mousepressed(x, y, button, touch)
     holding = 0
     
   end
+end
 
+function love.keypressed(key)
+  if gameactive == false then
+  mainmenu:keypressed(key)
+  end
+end
 
 function begincontact ()
 
@@ -49,6 +61,7 @@ end
 
 -- Draw
 function love.draw()
+  if gameactive == true then
   --[[Centered Image]]--
   love.graphics.draw(image, actframe, imagex, imagey)
   --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
@@ -62,12 +75,16 @@ function love.draw()
   
   love.graphics.polygon('fill',{100,100,200,100,200,200,100,200})
   maincat:draw()
-
+  obby:draw()
+  else
+  mainmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+  end
+  
 end
 
 -- Update
 function love.update(dt)
-  
+  if gameactive == true then
   elapsed = elapsed + dt
   
   if (holding == 1) then
@@ -93,15 +110,14 @@ function love.update(dt)
   end
   world:update(dt)
   maincat.collide()
-  
+else
+  mainmenu:update(dt)
+  end
   --[[ keep at or under 2048 X 2048]]--
 
 end
 
--- Load
-function love.load()
-  love.graphics.setDefaultFilter("nearest","nearest")
-  love.graphics.setBackgroundColor(255,255,255,255)
+function loadgame()
   image = love.graphics.newImage("test.png")
   frames[1] = love.graphics.newQuad(0,0,128,128, image:getDimensions())
   frames[2] = love.graphics.newQuad(128,128,128,128, image:getDimensions())
@@ -114,7 +130,7 @@ function love.load()
   
   world = love.physics.newWorld(0,9.8*64, true)
   world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-  maincat = cat.new(100, 0, 25, world)
+  maincat = cat.new(250, 400, 25, world)
   local floor = {}
   floor.body = love.physics.newBody(world ,love.graphics.getWidth()/2,love.graphics.getHeight())
   floor.shape = love.physics.newRectangleShape(love.graphics.getWidth(), 2)
@@ -122,6 +138,37 @@ function love.load()
   -- bouncy
   floor.prop:setRestitution(0)
   maincat.p.body:setFixedRotation(false)
+  obby = map.new(245,10,100,world)
+end
+
+-- Load
+function love.load()
+  love.graphics.setDefaultFilter("nearest","nearest")
+  love.graphics.setBackgroundColor(255,255,255,255)
+
+  mainmenu = menu.new()
+  mainmenu:addItem{
+		name = 'Start Game',
+		action = function()
+      gameactive = true
+      -- revert graphics
+      love.graphics.setColor(255, 255, 255, 128)
+      loadgame()
+		end
+	}
+	mainmenu:addItem{
+		name = 'Options',
+		action = function()
+			-- do something
+		end
+	}
+	mainmenu:addItem{
+		name = 'Quit',
+		action = function()
+			love.event.quit()
+		end
+	}
+
   
   
   
