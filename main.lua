@@ -1,4 +1,5 @@
 require("assets.cat")
+local obb = require("assets.obby")
 
 pos = 0
 local image
@@ -54,7 +55,8 @@ function love.draw()
   
   love.graphics.polygon('fill',{100,100,200,100,200,200,100,200})
   maincat:draw()
-
+  
+  
 end
 
 -- Update
@@ -109,7 +111,8 @@ function love.load()
   floor.prop = love.physics.newFixture(floor.body,floor.shape)
   floor.prop:setRestitution(0.9)
   maincat.p.body:setFixedRotation(false)
-
+  
+  obstical = shape.new( 0, 0, world, 0.5)
 end
 
 function love.quit()
