@@ -1,17 +1,14 @@
 --[[
 Simple Menu Library
-by nkorth
+by nkorth and WitheredFlame
 
-Requires: love2d
-Recommended: hump.gamestate
-
-Public Domain - feel free to hack and redistribute this as much as you want.
 ]]--
 return {
 	new = function()
 		return {
 			items = {},
 			selected = 1,
+			active = true,
 			animOffset = 0,
 			loaded = false,
 			load = function(self)
@@ -23,6 +20,7 @@ return {
 				self.loaded = true
 			end,
 			mousepressed = function(self, xt, yt)
+				if self.active == true then
 				if (xt ~= nil and yt ~= nil) then
 				if (xt >= self.x and xt <= (self.x+self.width)) then
 					if (yt >= self.y and yt <= (self.y+self.height*self.count)) then
@@ -32,6 +30,7 @@ return {
 					end
 				end
 				end
+			end
 
 			end,
 			addItem = function(self, item)
@@ -63,6 +62,7 @@ return {
 				end
 			end,
 			keypressed = function(self, key)
+				if self.active == true then
 				if key == 'up' then
 					if self.selected > 1 then
 						self.selected = self.selected - 1
@@ -86,6 +86,7 @@ return {
 
 				end
 			end
+		end
 		}
 
 	end
