@@ -1,9 +1,9 @@
-cat = {}
+catobject = {}
 local image = love.graphics.newImage("cat.jpg")
 local width = image:getWidth()
 local height = image:getHeight()
 
-cat.new = function(x, y, rad, physics)
+catobject.new = function(x, y, rad, physics, id)
   local self = self or {}
   self.x = x
   self.y = y
@@ -26,7 +26,7 @@ cat.new = function(x, y, rad, physics)
   self.p.prop:setCategory(2) -- 1 - 16
   --self.p.prop:setMask(1) NO! Defulat catagory is 1.
   self.p.prop:setGroupIndex(-2) --  will allways collide with same positive values and never with same negative
-  self.p.prop:setUserData("cat") -- idk
+  self.p.prop:setUserData(id) -- data storage
 
 
   self.p.rectp:setGroupIndex(-3)
@@ -53,8 +53,8 @@ cat.new = function(x, y, rad, physics)
     end
     
     self.draw = function () -- Draw
-      love.graphics.draw(image,(self.p.body:getX()),(self.p.body:getY()),
-        self.p.body:getAngle(),.1,.1,width/2,height/2)
+      --love.graphics.draw(image,(self.p.body:getX()),(self.p.body:getY()),
+     --   self.p.body:getAngle(),.1,.1,width/2,height/2)
       love.graphics.circle("fill", self.p.body:getX(), self.p.body:getY(), self.rad)
 
       

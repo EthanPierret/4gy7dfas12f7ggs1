@@ -1,8 +1,11 @@
-require("assets.cat")
+require("catmanager")
 require("assets.map")
 require("assets.food")
+require("objectmanager")
+require("collisionmanager")
+require("gameover")
+--require("collisionmanager")
 local menu =  require("assets.menu")
-local maping = require("assets.obby")
 
 local game = {}
 pos = 0
@@ -19,19 +22,26 @@ local world
 local maincat
 local nums
 
+
+
 local holding
 local gameactive = false
 local fullscreen = false
 local menuw = 300
 local menuh = 40
-local debugtext = ""
+debugtext = ""
+debugtext2 = ""
 local optionsactive = false
 local optionsbuffer = false
 local optionstimer = 0
 local indexa = 0
 local indexb = 0
 
-local destroy_queue = {}
+mainmap = nil
+local collisionmanage
+local translist = {}
+
+destroy_queue = {}
 local workspace = {
   objects = {},
   textures = {},
@@ -63,16 +73,17 @@ Finish workspace, nesting off all values inside it.
 function love.mousepressed(x, y, button, touch)
     if gameactive == true then
     love.graphics.print(tostring(x), 0, 0)
-    
-    if (x > maincat.p.body:getX()) then
-      maincat.p.body:applyLinearImpulse(5,0)
-      maincat.p.body:applyAngularImpulse(2)
+    if maincat.catslist[1] then
+    if (x > maincat.catslist[1].p.body:getX()) then
+      maincat.catslist[1].p.body:applyLinearImpulse(5,0)
+      maincat.catslist[1].p.body:applyAngularImpulse(2)
       holding = 1
     else
-      maincat.p.body:applyLinearImpulse(-5,0)
-      maincat.p.body:applyTorque(-2)
+      maincat.catslist[1].p.body:applyLinearImpulse(-5,0)
+      maincat.catslist[1].p.body:applyTorque(-2)
       holding = 2
     end
+  end
   elseif optionsactive == true then
     optionmenu:mousepressed(x,y)
   else
@@ -115,11 +126,13 @@ function love.draw()
   love.graphics.circle('fill', pos + 0, 0, 50)
   
   love.graphics.polygon('fill',{100,100,200,100,200,200,100,200})
-  for f,v in ipairs(workspace.objects) do
-  
-  end
 
   love.graphics.print(debugtext,0,0)
+  love.graphics.print(debugtext2,0,50)
+
+  mainmap:draw()
+  maincat:draw()
+ 
 
 
   elseif optionsactive == true then
@@ -137,11 +150,11 @@ function love.update(dt)
   elapsed = elapsed + dt
   
   if (holding == 1) then
-    maincat.p.body:applyLinearImpulse(5,0)
-    maincat.p.body:applyAngularImpulse(2)
+    maincat.catslist[1].p.body:applyLinearImpulse(5,0)
+    maincat.catslist[1].p.body:applyAngularImpulse(2)
   elseif (holding == 2) then
-    maincat.p.body:applyLinearImpulse(-5,0)
-    maincat.p.body:applyAngularImpulse(-2)
+    maincat.catslist[1].p.body:applyLinearImpulse(-5,0)
+    maincat.catslist[1].p.body:applyAngularImpulse(-2)
   end   
   
   if ( pos < love.graphics.getWidth() and elapsed > 0.05) then
@@ -157,13 +170,24 @@ function love.update(dt)
     actframe = frames[curframe]
   
   end
+  
   world:update(dt)
+  
+  
+  for f,v in ipairs(destroy_queue) do
+    
+    for h,i in ipairs(destroy_queue[f]) do
+      if destroy_queue[f][2] == -2 then
+        removeshape(destroy_queue[f][1],destroy_queue[f][2],maincat)
+      else
+     removeshape(destroy_queue[f][1],destroy_queue[f][2],mainmap)
+      end 
+      end
+     end
+      destroy_queue = {}
 
 
-  for b in pairs(destroy_queue) do
-    world:DestroyBody(b)
-    destroy_queue[b] = nil
-  end
+  
   
   --game.maincat:release() does not have object references set up, only global. maincat.p.prop:destroy() works.
 elseif optionsactive == true then
@@ -187,8 +211,10 @@ function loadgame()
   imagey = halfh - ({actframe:getViewport()})[4]/2
   
   world = love.physics.newWorld(0,9.8*64, true)
-  world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-  workspace.objects.maincat = cat.new(250, 400, 25, world)
+  
+
+  collisionmanage = collisionmanager.new(1)
+
   local floor = {}
   floor.body = love.physics.newBody(world ,love.graphics.getWidth()/2,love.graphics.getHeight())
   floor.shape = love.physics.newRectangleShape(love.graphics.getWidth(), 2)
@@ -196,14 +222,22 @@ function loadgame()
   floor.prop:setUserData("floor")
   floor.prop:setGroupIndex(10)
   -- bouncy
+  -- maincat = cat.new(200,400,25,world)
   floor.prop:setRestitution(0)
-  maincat.p.body:setFixedRotation(false)
-  obby = map.new(245,10,100,world)
-  map = shape.new(50,50,world,2)
-  nums = food.new(50, 400, 25, world)
+ 
+  
+  -- mainmap = map.new(0,425,1,world,0.2,2)
+  
+  mainmap = map.new(0,425,1,0.2,1,world)
+  maincat = cat.new(200,400,25,world,1)
+  
+ -- maincat.obbylist.cats[1].p.body:setFixedRotation(false)
+  
   world:setCallbacks(beginContact, endContact, preSolve, postSolve)
   
 end
+
+
 
 -- Load
 function love.load()
@@ -277,29 +311,13 @@ function love.quit()
 end
 
 function beginContact(a, b, coll)
-  love.graphics.setColor(0,0,0,255)
-  local x5,y5 = coll:getNormal()
-  debugtext = a:getGroupIndex().." colliding with "..b:getGroupIndex().." with a vector normal of: "..x5..", "..y5
-  indexa = a:getGroupIndex()
-  indexb = b:getGroupIndex()
-  if indexa == -3 or indexb == -3 then 
-    if indexa == -4 then
-      a:getBody():release() -- works.
-      
-      if some_condition then
-        -- mark for deletion
-        destroy_queue[a] = true
-      end
-      
-
-    end
-    if indexb == -4 then
-      b:getShape( ):release()
-      nums:destroy()
-    end
-  end
   
+  translist[1] = a
+  translist[2] = b
+  translist[3] = coll
   
+  begincollision(a,b,coll)
+  --local x5,y5 = coll:getNormal()
   
 end
  
@@ -313,4 +331,8 @@ end
  
 function postSolve(a, b, coll, normalimpulse, tangentimpulse)
  
+end
+
+function gameover(id)
+  triggergameover(maincat, world, id)
 end
