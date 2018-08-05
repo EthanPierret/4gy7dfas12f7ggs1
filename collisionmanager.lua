@@ -30,11 +30,11 @@ begincollision = function(a,b,coll)
   
    if indexa == -5 or indexb == -5 or indexa == -6 or indexb == -6 then
     if indexa == -2 then
-    --table.insert(destroy_queue, {a:getUserData( ), -2})
-    gameover(a:getUserData( ))
+    -- table.insert(destroy_queue, {a:getUserData( ), -2})
+    dogameover(a:getUserData( ))
     else
-     -- table.insert(destroy_queue, {b:getUserData( ), -2})
-      gameover(b:getUserData( ))
+    -- table.insert(destroy_queue, {b:getUserData( ), -2})
+      dogameover(b:getUserData( ))
     end
    end
 

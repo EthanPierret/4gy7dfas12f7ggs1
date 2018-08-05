@@ -1,64 +1,91 @@
-obby = {}
-local quads = {}
- 
-  function resizeb(list, scale)
-    for _,v in pairs(list) do
-        
-            list[_] = list[_] * scale
-           -- v[1] = v[1] * scale
-    end
-end
 
-  obby.new = function(x, y, physics, scale, list)
-    local self = self or {}
-    love.graphics.setColor(0,0,0,255)
-    local didtest = false
+ 
+  
+return {
+  new = function()
+    return{
+    require("assets/logic"),
+    shapes = {},
+    body,
+    nextshapes = nil,
+    didtest = false,
+    templist = {},
+
+
+
+    newbody = function(self, x, y, physics)
+      love.graphics.setColor(0,0,0,255)
+      self.body = love.physics.newBody(physics,x, y, "static")
+    end,
+
+
+
+    newshape = function(self, x, y, physics, scale, list1, list2)
+
+    self.nextshapes = getlistlenth(self.shapes) + 1
     
-    resizeb(list, scale)
+
+
     --self.shape = love.physics.newPolygonShape(sidel[1][1],sidel[1][2],sidel[2][1],sidel[2][2],
    -- sidel[3][1], sidel[3][2], sidel[4][1], sidel[4][2], sidel[5][1], sidel[5][2], sidel[6][1], sidel[6][2],
    -- sidel[7][1], sidel[7][2], sidel[8][1], sidel[8][2])
-   self.shape = love.physics.newPolygonShape(list)
-    self.body = love.physics.newBody(physics,x, y, "static" )
-    self.fixture = love.physics.newFixture(self.body,self.shape, 1)
-    self.fixture:setUserData("obby")
-    self.fixture:setGroupIndex(-5)
-    self.fixture:setCategory(2)
-    self.shape2 = love.physics.newRectangleShape(200, 50)
-    self.fixture2 = love.physics.newFixture(self.body, self.shape2, 1)
-    self.fixture2:setSensor(true)
-
-
-    self.draw = function()
-        love.graphics.setColor(0,0,0,255)
-        local templist = list
+    
       
-        if didtest == false then
-        for f,v in ipairs(templist) do
-        
-          if (f % 2 == 0) then
-          templist[f] = templist[f] + self.body:getY()
+      
+    
+     self.shapes[self.nextshapes] = {}
+     --self.shapes[self.nextshapes]["list"] = {}
+     -- self.shapes[self.nextshapes]["shape"] = nil
+     -- self.shapes[self.nextshapes]["fixture"] = nil
+      
+    self.shapes[self.nextshapes]["backuplist"] = list2
+    self.shapes[self.nextshapes]["list"] = list1
+    self.shapes[self.nextshapes]["shape"] = love.physics.newPolygonShape(list1)
+    self.shapes[self.nextshapes]["fixture"] = love.physics.newFixture(self.body, self.shapes[self.nextshapes]["shape"], 1)
+    self.shapes[self.nextshapes]["fixture"]:setUserData("obby")
+    self.shapes[self.nextshapes]["fixture"]:setGroupIndex(-5)
+    self.shapes[self.nextshapes]["fixture"]:setCategory(2)
+    end,
+
+    draw = function(self)
+      
+      -- if self.didtest == false then
+
+        for f,i in ipairs(self.shapes) do
+          
+         for v,k in ipairs(self.shapes[f]["list"]) do
+          
+              self.templist = self.shapes[f]["list"]
+                
+              if self.didtest == false then
+          if (v % 2 == 0) then
+            self.templist[v] = self.templist[v] + self.body:getY()
           --love.graphics.setColor(255,255,255,128)
           else
-            templist[f] = templist[f] + self.body:getX()
+            self.templist[v] = self.templist[v] + self.body:getX()
           end
         end
-        didtest = true
-      end
+          love.graphics.polygon("line", self.templist)
+          self.templist = self.shapes[f]["backuplist"]
+          self.shapes[f]["list"] = self.shapes[f]["backuplist"]
+      --  end
+        
+        end 
+      end 
+        self.didtest = true
+      end,
+    
 
-        love.graphics.polygon("line", templist)
-    end
-
-    self.resize = function()
+    resize = function(self)
        -- for _,v in sidel do
 
         --end
     end
     
 
-    return self
+  }
   end
-
+}
  
 
 

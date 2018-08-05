@@ -1,32 +1,12 @@
 map = {}
 
-require("assets.obby")
+local obby = require("assets.obby")
 require("assets.cat")
 require("assets.food")
+require("assets.leveldata")
 require("assets.logic")
 
 
-
-local obbysdata = {
-    sidel = { 2, -4 ,
-         564,  0 ,
-         390,  86 ,
-         200,  120 ,
-         88,  220 ,
-         128,  444 ,
-         334,  492 ,
-         0,  558,
-         },
-         
-     sider = { 0, 0 ,
-         300,  0 ,
-         300,  50 ,
-         100,  50 ,
-         100,  150 ,
-         300,  150 ,
-         300,  200 ,
-         0,  200}
-}
 
 removeshape = function(id, ind, list)
     
@@ -55,7 +35,8 @@ end
 map.new = function(x, y, idmap,scale, id, world)
   local self = self or {}
   self.physics = world
-
+  
+  
   local obbylist = {
     food = {},
     obbys = {}
@@ -70,13 +51,61 @@ self.obbylist = obbylist
 
   local foodids = getlistlenth(obbylist.food)
   local obbyids = getlistlenth(obbylist.obbys)
-
+  self.mapdata = getmapdata(id)
             --- Map definition
+
+    self.obbylist.obbys[obbyids+1] = obby.new(self.x, self.y, self.physics)
+    self.obbylist.obbys[obbyids+1]:newbody(self.x, self.y, self.physics)
+
+   
+
+    for f,v in ipairs(self.mapdata) do
+        if self.mapdata[f] ~= nil then
+            local templist = self.mapdata[f]["data"]
+            local temp2 = self.mapdata[f]["off"]
+            
+            for _,v in pairs(templist) do
+        
+                templist[_] = templist[_] * self.scale
+
+               -- v[1] = v[1] * scale
+                end
+
+                for _,v in pairs(temp2) do
+        
+                    temp2[_] = temp2[_] * self.scale
+    
+                   -- v[1] = v[1] * scale
+                    end
+
+    for f,v in ipairs(templist) do
+        
+        if (f % 2 == 0) then
+        templist[f] = templist[f] + temp2["y"]
+        --love.graphics.setColor(255,255,255,128)
+        else
+          templist[f] = templist[f] + temp2["x"]
+        end
+      end
+    local templist2 = {}
+      for f,v in ipairs(templist) do
+
+        table.insert(templist2, templist[f])
+
+      end
+            
+            
+            self.obbylist.obbys[obbyids+1]:newshape(self.mapdata[f]["off"]["x"], self.mapdata[f]["off"]["y"], self.physics, self.scale, templist, templist2)
+        end
+
+  
+
+ --[[
  if self.idmap == 1 then
     
     self.obbylist.obbys[obbyids+1] = obby.new(self.x, self.y, self.physics, self.scale, obbysdata.sidel)
     self.obbylist.obbys[obbyids+2] = obby.new(self.x + math.floor(self.scale*500), self.y, self.physics, self.scale, obbysdata.sider)
-    self.obbylist.food[foodids+1] = food.new(self.x + math.floor(self.scale*200), self.y + math.floor(self.scale*150), 25, self.physics, foodids+1)
+    self.obbylist.food[foodids+1] = food.new(self.x + math.floor(self.scale*200), self.y + math.floor(self.scale*150), 25, self.physics, foodids+1) ]]--
    -- table.insert(obbylist.food, food.new(self.x + math.floor(self.scale*200), self.y + math.floor(self.scale*150), 25, physics,12))
   --testfood = food.new(self.x + math.floor(self.scale*50), self.y + math.floor(self.scale*50), 25, physics)
   --obbylist[id] = tempstlist
