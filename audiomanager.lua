@@ -125,11 +125,7 @@ return{
             end
         end
         end,
-<<<<<<< HEAD
         update = function(self)
-=======
-        update = function(self,dt)
->>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
             if self.timer > 1 then
                 self.timer = 0
                 if self.song ~= nil then
@@ -149,11 +145,7 @@ return{
                 self:updatelist(self.id)
                 end
             else
-<<<<<<< HEAD
             self.timer = self.timer + 0.016
-=======
-            self.timer = self.timer + dt
->>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
         end
         end,
 
@@ -171,11 +163,7 @@ return{
             for i, j in ipairs(self.storage[id]) do
                 self.storage[id][i]:setVolume(self.volume)
                 self.storage[id][i]:setVolumeLimits(0,self.volume)
-<<<<<<< HEAD
                 --self.storage[id][i]:setPitch(pitch)
-=======
-                self.storage[id][i]:setPitch(pitch)
->>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
 
                 if self.playing == false then
                 self.song = self.storage[id][r]
