@@ -1,6 +1,6 @@
 
 
-require("assets/aninmation")
+
 
 return {
 new = function()
@@ -13,6 +13,9 @@ new = function()
     frame = {},
     animation = {},
     actframe = 1,
+    emotionmultiplier = 1,
+    clock = 0,
+    require("assets/aninmation"),
 
     
     image = love.graphics.newImage("assets/cat.jpg"),
@@ -39,8 +42,8 @@ new = function()
   self.p.rectp = love.physics.newFixture(self.p.body, self.p.rects, 0)
   
 
-  self.animation = newAnimation(love.graphics.newImage("cat.jpg"), 550, 550)
-
+  self.animation1 = newAnimation(love.graphics.newImage("cat.jpg"), 550, 550) -- load all cat emotion variations into here, and use a emtion counter in .self
+  
 
   self.p.prop:setMask(4) -- don't collide with those Catagories
   self.p.prop:setCategory(2) -- 1 - 16
@@ -61,14 +64,15 @@ new = function()
   
   end,
 
-    collide = function (self) -- Somthing is disableing calling the getContacts(), figure out what
-      local contacts = self.p.body:getContacts()
-      if contacts ~= nil then
-
-        --local printie = contacts[l]:getFixtureList()
-        --local printie2 = printie:getDensity(
-        --love.graphics.print(contacts[printie2],100, 25)
-      love.graphics.print("Contact made",25,25)
+    update = function(self,dt) -- Somthing is disableing calling the getContacts(), figure out what
+      if self.emotionmultiplier ~= 1 then
+      if self.clock >= 1 then
+        self.emotionmultiplier = 1
+         self.clock = 0
+      else
+        self.clock = self.clock+dt
+      end
+      
       end
   
      -- love.graphics.print(contacts)
@@ -81,15 +85,20 @@ new = function()
     updatemodel = function(self, frame)
       self.actframe = frame
     end,
+
+    changeemotion = function(self, id)
+      self.emotionmultiplier = id
+
+    end,
     
     draw = function(self) -- Draw
       
-     love.graphics.draw(self.image,self.animation.quads[self.actframe],(self.p.body:getX()),(self.p.body:getY()),
+     love.graphics.draw(self.image,self.animation1.quads[self.actframe],(self.p.body:getX()),(self.p.body:getY()),
      self.p.body:getAngle(),.1,.1,self.width/2,self.height/2)
-
+      love.graphics.setColor(0,0,0,255)
       
       love.graphics.circle("fill", self.p.body:getX(), self.p.body:getY(), self.rad)
-      
+      love.graphics.setColor(128,128,128,255)
     end 
   }
   end

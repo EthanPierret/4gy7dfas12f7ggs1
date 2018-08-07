@@ -25,7 +25,11 @@ return {
 				if (xt >= self.x and xt <= (self.x+self.width)) then
 					if (yt >= self.y and yt <= (self.y+self.height*self.count)) then
 						self.selected = math.floor((yt-self.y)/self.height)+1
-						self.items[self.selected]:action()
+						if xt < (self.width/2 + self.x) then
+						self.items[self.selected]:action(true)
+						else
+						self.items[self.selected]:action(false)
+						end
 
 					end
 				end
@@ -35,6 +39,11 @@ return {
 			end,
 			addItem = function(self, item)
 				table.insert(self.items, item)
+			end,
+
+			updatename = function(self, id, change)
+			self.items[id]["name"] = change
+
 			end,
 			update = function(self, dt)
 				self.animOffset = self.animOffset / (1 + dt*10)
@@ -61,7 +70,7 @@ return {
 					else
 						love.graphics.setColor(0, 0, 0, 128)
 					end
-					love.graphics.print(item.name, x + (width/2 - item.name:len()*fontsize/4), y + height*(i-1) + (fontsize/2)-fontsize/4)
+					love.graphics.print(item.name, x + (width/2 - item.name:len()*fontsize/3.9), y + height*(i-1) + (fontsize/2)-fontsize/4)
 				end
 			end
 			end,

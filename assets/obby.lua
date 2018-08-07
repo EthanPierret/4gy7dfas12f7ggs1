@@ -14,7 +14,6 @@ return {
 
 
     newbody = function(self, x, y, physics)
-      love.graphics.setColor(0,0,0,255)
       self.body = love.physics.newBody(physics,x, y, "static")
     end,
 
@@ -50,7 +49,7 @@ return {
     draw = function(self)
       
       -- if self.didtest == false then
-
+        love.graphics.setColor(0,0,0,255)
         for f,i in ipairs(self.shapes) do
           
          for v,k in ipairs(self.shapes[f]["list"]) do
@@ -73,6 +72,7 @@ return {
         end 
       end 
         self.didtest = true
+        love.graphics.setColor(128,128,128,255)
       end,
     
 

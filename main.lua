@@ -6,9 +6,12 @@ local catmanager = require("catmanager")
 require("objectmanager")
 require("collisionmanager")
 require("gameover")
+
+require("menumanager")
 --require("collisionmanager")
 local menu =  require("assets.menu")
 local music = require("audiomanager")
+local saves = require("savemanager")
 
 local game = {}
 pos = 0
@@ -44,6 +47,12 @@ local gameover = false
 local loaded = false
 
 
+local creditsmenu
+musicmenuactive = nil
+local musicmenu
+musicmenuactive = nil
+
+
 mainmap = nil
 local collisionmanage
 local translist = {}
@@ -51,8 +60,12 @@ gamecats = {}
 local catanim
 local sixframe
 local randomseed = 0
+local clostestmouseX
 
 destroy_queue = {}
+
+-- local ser = require("Path.to.ser")
+savedata = {}
 
 --[[]]--
 
@@ -63,10 +76,21 @@ ToDo
 
 
   Get the camera to go up with cat if the cat moves? But not side to side.
+  In Cat : load all cat emotion variations into here, and use a emtion counter in .self
 
 
+  Make the Cat do a animation when touched.
 
+  
 
+  Unfinished:
+  Camera
+  Map generator
+  Animation for the load screen (have it be compleetly white when it ends)
+  Cats menu
+  Cats acheivement/unlock
+  Food placement
+  Spikey Food
 
 
 ]]--
@@ -76,6 +100,8 @@ ToDo
 
 -- Mouse
 function love.mousepressed(x, y, button, touch)
+  clostestmouseX = x
+
     if gameactive == true then
     
     if gamecats[1] ~= nil then
@@ -96,6 +122,10 @@ function love.mousepressed(x, y, button, touch)
     optionmenu:mousepressed(x,y)
   elseif gameover == true then
     gameovermenu:mousepressed(x,y)
+  elseif musicmenuactive == true then
+    musicmenu:mousepressed(x,y)
+  elseif creditsmenuactive == true then
+    creditsmenu:mousepressed(x,y)
   else
     mainmenu:mousepressed(x,y)
   end
@@ -113,8 +143,15 @@ function love.keypressed(key)
 
   elseif optionsactive == true then
       optionmenu:keypressed(key)
+
   elseif gameover == true then
     gameovermenu:keypressed(key)
+
+  elseif musicmenuactive == true then
+    musicmenu:keypressed(key)
+
+  elseif creditsmenuactive == true then
+    creditsmenu:keypressed(key)
   else
     
   mainmenu:keypressed(key)
@@ -161,6 +198,13 @@ function love.draw()
   elseif optionsactive == true then
     optionmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
 
+
+  elseif musicmenuactive == true then
+    musicmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+
+  elseif creditsmenuactive == true then
+    creditsmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+
   else
   mainmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
   end
@@ -173,7 +217,10 @@ end
 
 -- Update
 function love.update(dt)
+  gamemusic:update(dt)
   elapsed = elapsed + dt
+
+
   if gameactive == true then
     if randomseed == 0 then
       randomseed = elapsed
@@ -185,12 +232,14 @@ function love.update(dt)
   elseif (holding == 2) then
     gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
     gamecats[1].catslist[1].p.body:applyAngularImpulse(-2)
-  end   
+  end 
+  maincat:update(dt) 
 end
   
 
 
   world:update(dt)
+  
   
   
   for f,v in ipairs(destroy_queue) do
@@ -214,6 +263,10 @@ end
   --game.maincat:release() does not have object references set up, only global. maincat.p.prop:destroy() works.
 elseif optionsactive == true then
   optionmenu:update(dt)
+elseif musicmenuactive == true then
+  musicmenu:update(dt)
+elseif creditsmenuactive == true then
+  creditsmenu:update(dt)
 else
   mainmenu:update(dt)
 end
@@ -250,12 +303,50 @@ function loadgame()
   -- maincat = cat.new(200,400,25,world)
   floor.prop:setRestitution(0)
 
+  local ceiling = {}
+  ceiling.body = love.physics.newBody(world ,love.graphics.getWidth()/2,0-50)
+  ceiling.shape = love.physics.newRectangleShape(love.graphics.getWidth()*5, 2)
+  ceiling.prop = love.physics.newFixture(ceiling.body,ceiling.shape)
+  ceiling.prop:setUserData("ceiling")
+  ceiling.prop:setGroupIndex(-5)
   
 
  -- music trigger
   if loaded == false then
-    gamemusic:playlist(1,elapsed,1,1)
+    gamemusic:setseed(elapsed)
+    if savedata["musicpreference"] ~= nil then
+    gamemusic:loadlist(savedata["musicpreference"])
+    else
+    gamemusic:loadlist(1)
+    end
     gamemusic:loadsfx(1,1) -- 0.5 is 1 octive lower
+  if savedata["musicvolume"] ~= nil then
+  gamemusic:updatevolume(savedata["musicvolume"]/10)
+  end
+
+
+    local function makemusic()
+    if savedata["musicpreference"] ~= nil then
+      if savedata["musicvolume"] ~= nil then
+        gamemusic.volume = savedata["musicvolume"]/10
+        gamemusic:playlist(savedata["musicpreference"],1)
+      else
+        gamemusic:playlist(savedata["musicpreference"],1)
+      end
+    
+    else
+      gamemusic:playlist(1,elapsed,1,1)
+    end
+  end
+  if savedata["musicswitch"] ~= nil then
+    if savedata["musicswitch"] == "Off" then
+    else
+    makemusic()
+    end
+  else
+    makemusic()
+  end
+   -- table.save(savedata,"save.lua")
   end
 
 
@@ -281,10 +372,33 @@ end
 
 -- Load
 function love.load()
-  preload()
+  if love.filesystem.getInfo("save.lua") == nil then
+    love.filesystem.newFile("save.lua")
+  end
+
+  savedata = table.load("save.lua")
   gamemusic = music.new()
-  gamemusic:loadlist(1)
+  if savedata["musicpreference"] ~= nil then
+    gamemusic:loadlist(savedata["musicpreference"])
+  else
+    gamemusic:loadlist(1)
+  end
+
+  debugtext = savedata
+  preload()
+  
+
 end
+
+
+-- Quit
+function love.quit()
+  if savedata ~= nil then
+   table.save(savedata,"save.lua")
+  end
+
+end
+ 
 
 
 function preload()
@@ -322,45 +436,25 @@ function preload()
 
 end
 
-function loadoptions()
-  optionmenu = menu.new()
-  optionmenu:addItem{
-		name = 'Cats',
-		action = function()
-      
-      -- revert graphics
-      
-		end
-	}
-	optionmenu:addItem{
-		name = 'Credits',
-		action = function()
-      
-		end
-  }
-  optionmenu:addItem{
-		name = 'Music',
-		action = function()
-      
-		end
-	}
-	optionmenu:addItem{
-		name = 'Quit',
-		action = function()
-      
-      optionsactive = false
-      mainmenu.active = true
-		end
-  }
-  
-  optionmenu:load()
-end
 
 
 
-function love.quit()
-  love.event.quit()
-end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function beginContact(a, b, coll)
   
@@ -382,6 +476,16 @@ function postSolve(a, b, coll, normalimpulse, tangentimpulse)
  
 end
 
+
+
+
+
+
+
+
+
+
+
 function dogameover(id)
   if gameover == false then
   triggergameover(maincat, world, id, gamemusic)
@@ -401,6 +505,15 @@ function gamecleanup()
   debugtext2 = ""
 end
 
+
+
+
+
+
+
+
+
+-- Gameover
 function drawgameover(score)
     gameovermenu = menu.new()
 
@@ -442,4 +555,272 @@ function drawgameover(score)
     }
     gameovermenu.active = true
     gameovermenu:load()
+end
+
+
+
+
+
+
+
+
+
+-- Options
+function loadoptions()
+  optionmenu = menu.new()
+  optionmenu:addItem{
+		name = 'Cats',
+		action = function()
+      
+      -- revert graphics
+      
+		end
+	}
+	optionmenu:addItem{
+		name = 'Credits',
+    action = function()
+      makecreditsmenu()
+      optionsactive = false
+      optionmenu.active = false
+      
+		end
+  }
+  optionmenu:addItem{
+		name = 'Music',
+		action = function()
+      makemusicmenu()
+      optionsactive = false
+      optionmenu.active = false
+      musicmenuactive = true
+      
+		end
+	}
+	optionmenu:addItem{
+		name = 'Back',
+		action = function()
+      optionmenu.active = false
+      optionsactive = false
+      mainmenu.active = true
+      musicmenuactive = false
+		end
+  }
+  
+  optionmenu:load()
+end
+
+
+
+
+
+
+
+
+
+-- Music Menu
+function makemusicmenu()
+  if musicmenu == nil then
+  musicmenu = menu.new()
+  
+  local r = "Defualt"
+  local l = 1
+  local m = "On"
+
+  if savedata["musicswitch"] ~= nil then
+    m = savedata["musicswitch"]
+  end
+
+  if savedata["musicvolume"] ~= nil then
+    l = savedata["musicvolume"]/10
+  end
+
+  if savedata["musicpreference"] ~= nil then
+    if savedata["musicpreference"] == 1 then
+      r = "Defualt"
+    elseif savedata["musicpreference"] == 2 then
+      r = "Dance"
+    elseif savedata["musicpreference"] == 3 then
+      r = "Techno"
+    elseif savedata["musicpreference"] == 4 then
+      r = "Relaxing"
+    elseif savedata["musicpreference"] == 5 then
+      r = "hip-hop"
+    end
+  end
+  musicmenu:addItem{
+  name = 'Music Preference: '..r,
+  action = function()
+    if savedata["musicpreference"] ~= nil then
+      if savedata["musicpreference"] > 4 then
+        
+        savedata["musicpreference"] = 1
+      else
+      savedata["musicpreference"] = savedata["musicpreference"] + 1
+      
+      end
+    else
+      savedata["musicpreference"] = 2
+    end
+
+    if savedata["musicpreference"] == 1 then
+      gamemusic:loadlist(1)
+      gamemusic:updatelist(1)
+      r = "Defualt"
+    elseif savedata["musicpreference"] == 2 then
+      gamemusic:loadlist(2)
+      gamemusic:updatelist(2)
+      r = "Dance"
+    elseif savedata["musicpreference"] == 3 then
+      gamemusic:loadlist(3)
+      gamemusic:updatelist(3)
+      r = "Techno"
+    elseif savedata["musicpreference"] == 4 then
+      gamemusic:loadlist(4)
+      gamemusic:updatelist(4)
+      r = "Relaxing"
+    elseif savedata["musicpreference"] == 5 then
+      gamemusic:loadlist(5)
+      gamemusic:updatelist(5)
+      r = "hip-hop"
+    end
+    r = "Music Preference: "..r
+    musicmenu:updatename(1,r)
+  end
+}
+  musicmenu:addItem{
+  name = 'Volume: '..l,
+  action = function()
+    if savedata["musicvolume"] ~= nil then
+      if clostestmouseX < halfw then
+        
+        
+        if savedata["musicvolume"] == 1 then
+          savedata["musicvolume"] = 10
+          
+        else
+        savedata["musicvolume"] = savedata["musicvolume"] - 1
+        end
+    end
+    if clostestmouseX > halfw then
+      
+      if savedata["musicvolume"] >= 10 then
+        savedata["musicvolume"] = 1
+      else
+        savedata["musicvolume"] = savedata["musicvolume"] + 1
+      end
+    end
+    l = "Volume: "..savedata["musicvolume"]/10
+    musicmenu:updatename(2,l)
+  else
+    savedata["musicvolume"] = 10
+  end
+  gamemusic:updatevolume(savedata["musicvolume"]/10)
+  end
+}
+musicmenu:addItem{
+  name = 'Music: '..m,
+  action = function()
+    if savedata["musicswitch"] ~= nil then
+      if savedata["musicswitch"] == "On" then
+        savedata["musicswitch"] = "Off"
+        gamemusic:startstop(false)
+      else
+        savedata["musicswitch"] = "On"
+        gamemusic:startstop(true)
+        
+      end
+      musicmenu:updatename(3,"Music: "..savedata["musicswitch"])
+    else
+      savedata["musicswitch"] = "Off"
+      gamemusic:startstop(false)
+      
+      musicmenu:updatename(3,"Music: "..savedata["musicswitch"])
+    end
+
+    if savedata["musicpreference"] ~= nil then
+      gamemusic:updatelist(savedata["musicpreference"])
+      end
+    
+  end
+}
+  musicmenu:addItem{
+  name = 'Back',
+  action = function()
+          
+          musicmenu.active = false
+          optionmenu.active = true
+          optionsactive = true
+          musicmenuactive = false
+          creditsmenuactive = false
+          
+  end
+  }
+
+musicmenu:load()
+
+else
+  musicmenu.active = true
+  
+end
+musicmenuactive = true
+end
+
+
+
+
+
+
+
+
+
+
+-- Credits
+function makecreditsmenu()
+  if creditsmenu == nil then
+    creditsmenu = menu.new()
+
+    creditsmenu:addItem{
+          name = 'Credits',
+          action = function()
+        
+        -- revert graphics
+        
+          end
+      }
+      creditsmenu:addItem{
+        name = 'Music by Eric Matyas',
+        action = function()
+      
+      -- revert graphics
+      
+        end
+    }
+    creditsmenu:addItem{
+          name = 'www.   soundimage   .org',
+          action = function()
+ 
+          end
+      }
+      creditsmenu:addItem{
+          name = 'Back',
+          action = function()
+            creditsmenu.active = false
+            creditsmenuactive = false
+            optionmenu.active = true
+            optionsactive = true
+            musicmenuactive = false
+
+      
+          end
+    }
+    creditsmenu.active = true
+    creditsmenu:load()
+
+
+
+  else
+    creditsmenu.active = true
+  end
+
+  creditsmenuactive = true
+
 end

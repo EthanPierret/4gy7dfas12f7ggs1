@@ -28,3 +28,13 @@ for f,v in ipairs(templist) do
   end
   return templist
 end
+
+function checkforvalue(tab, val)
+    for index, value in ipairs(tab) do
+        if val == index then
+            return true
+        end
+    end
+
+    return false
+end

@@ -8,10 +8,10 @@ www.soundimage.org
 
 https://soundimage.org/fantasywonder/ - relaxing
 
-"Bedtime story"
-"surreal chase"
-"gentle closure"
-"moonlight flying" ?
+"Bedtime story" -- relax
+"surreal chase" -- dance
+"gentle closure" -- no, too slow
+"moonlight flying" ? -- relax
 
 
 https://soundimage.org/events/ - relaxing, atmopsheric
@@ -21,9 +21,9 @@ https://soundimage.org/events/ - relaxing, atmopsheric
 
 https://soundimage.org/dance-techno/ - techno, dance
 
-"technodreaming"
-"techno celebration"
-"snake trance" ?
+"technodreaming" -- techno
+"techno celebration" -- techno
+"snake trance" ? -- dance
 
 https://soundimage.org/puzzle-music/ - dance, relaxing
 
@@ -38,15 +38,16 @@ https://soundimage.org/corporate/ relaxing, techno
 
 
 https://soundimage.org/positive-upbeat/ Upbeat
-"happy endings"
-"better days ahead"
-"specail day"?
+"happy endings" -- upbeat
+"better days ahead" "bgm" - casual
+"specail day"? -- upbeat
+"boardwalk arcade"? -- Upbeat
+"pelican bay party" --upbeat
 
 Ending: "clamer times"
 Techno.
-"DANCING ON CLOUDS"
-"boardwalk arcade"?
-"a city for all mankind"
+"DANCING ON CLOUDS" -- Dance
+
+"a city for all mankind" -- too techno don't include
 
 Tropical
-"pelican bay party"

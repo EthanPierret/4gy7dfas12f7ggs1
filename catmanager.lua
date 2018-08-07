@@ -31,6 +31,16 @@ updatemodel = function(self,frame)
     self.catslist[f]:updatemodel(frame)
 end,
 
+update = function(self,dt)
+    for f,v in ipairs(self.catslist) do
+        if self.catslist[f] == nil then
+        else
+            self.catslist[f]:update(dt)
+        end
+    
+     end
+end,
+
 draw = function(self,arg)
 for f,v in ipairs(self.catslist) do
     if self.catslist[f] == nil then
