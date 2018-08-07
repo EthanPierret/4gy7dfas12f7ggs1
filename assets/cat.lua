@@ -64,13 +64,21 @@ new = function()
   
   end,
 
+<<<<<<< HEAD
     update = function(self) -- Somthing is disableing calling the getContacts(), figure out what
+=======
+    update = function(self,dt) -- Somthing is disableing calling the getContacts(), figure out what
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
       if self.emotionmultiplier ~= 1 then
       if self.clock >= 1 then
         self.emotionmultiplier = 1
          self.clock = 0
       else
+<<<<<<< HEAD
         self.clock = self.clock + 0.016
+=======
+        self.clock = self.clock+dt
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
       end
       
       end

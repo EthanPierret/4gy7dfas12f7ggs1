@@ -46,18 +46,24 @@ local gameover = false
 
 local loaded = false
 
+<<<<<<< HEAD
 local accum = 0
 local step = 0.016
 
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
 
 local creditsmenu
 musicmenuactive = nil
 local musicmenu
 musicmenuactive = nil
+<<<<<<< HEAD
 local catsmenu
 catsmenuactive = nil
 
 local gametimer = 0
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
 
 
 mainmap = nil
@@ -112,7 +118,10 @@ function love.mousepressed(x, y, button, touch)
     if gameactive == true then
     
     if gamecats[1] ~= nil then
+<<<<<<< HEAD
     
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
     if (x > gamecats[1].catslist[1].p.body:getX()) then
       gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
       gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
@@ -123,8 +132,11 @@ function love.mousepressed(x, y, button, touch)
       holding = 2
     end
   end
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   if gameover == true then
     gameovermenu:mousepressed(x,y)
   end 
@@ -136,8 +148,11 @@ function love.mousepressed(x, y, button, touch)
     musicmenu:mousepressed(x,y)
   elseif creditsmenuactive == true then
     creditsmenu:mousepressed(x,y)
+<<<<<<< HEAD
   elseif catsmenuactive == true then
     catsmenu:mousepressed(x,y)
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   else
     mainmenu:mousepressed(x,y)
   end
@@ -164,10 +179,13 @@ function love.keypressed(key)
 
   elseif creditsmenuactive == true then
     creditsmenu:keypressed(key)
+<<<<<<< HEAD
 
   elseif catsmenuactive == true then
     catsmenu:keypressed(key)
 
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   else
     
   mainmenu:keypressed(key)
@@ -180,6 +198,7 @@ end
 function love.draw()
   if gameactive == true then
   --[[Centered Image]]--
+<<<<<<< HEAD
   
   --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
   
@@ -190,6 +209,20 @@ function love.draw()
   love.graphics.print(debugtext,0,0)
   love.graphics.print(debugtext2,0,50)
 
+=======
+  love.graphics.draw(image, actframe, imagex, 100)
+  --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
+  love.graphics.draw(image, 500, 400, math.rad(30),0.5, 0.5, halfw, halfh)
+  
+  --[[love.graphics.setColor(0,0,0,255)]]--
+  
+  love.graphics.line(100,100,(love.graphics.getHeight()/2),love.graphics.getWidth()/2)
+
+
+  love.graphics.print(debugtext,0,0)
+  love.graphics.print(debugtext2,0,50)
+
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   mainmap:draw()
   maincat:draw(curframe)
 
@@ -219,9 +252,12 @@ function love.draw()
   elseif creditsmenuactive == true then
     creditsmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
 
+<<<<<<< HEAD
   elseif catsmenuactive == true then
     catsmenu:draw(halfw-100/2,halfh-100,100,100,22)
 
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   else
   mainmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
   end
@@ -232,6 +268,7 @@ end
 
 
 
+<<<<<<< HEAD
 
 -- Update
 function love.update(dt)
@@ -264,6 +301,31 @@ function love.update(dt)
 
 
 
+=======
+-- Update
+function love.update(dt)
+  gamemusic:update(dt)
+  elapsed = elapsed + dt
+
+
+  if gameactive == true then
+    if randomseed == 0 then
+      randomseed = elapsed
+      end     
+  if gameover == false then
+  if (holding == 1) then
+    gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
+    gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
+  elseif (holding == 2) then
+    gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
+    gamecats[1].catslist[1].p.body:applyAngularImpulse(-2)
+  end 
+  maincat:update(dt) 
+end
+  
+
+
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   world:update(dt)
   
   
@@ -276,8 +338,13 @@ function love.update(dt)
       else
      removeshape(destroy_queue[f][1],destroy_queue[f][2],mainmap)
       end 
+<<<<<<< HEAD
     end
   end
+=======
+      end
+     end
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
       destroy_queue = {}
 
 
@@ -287,6 +354,7 @@ function love.update(dt)
   
   
   --game.maincat:release() does not have object references set up, only global. maincat.p.prop:destroy() works.
+<<<<<<< HEAD
   elseif optionsactive == true then
   optionmenu:update(dt)
   elseif musicmenuactive == true then
@@ -298,10 +366,22 @@ function love.update(dt)
   else
   mainmenu:update(dt)
   end
+=======
+elseif optionsactive == true then
+  optionmenu:update(dt)
+elseif musicmenuactive == true then
+  musicmenu:update(dt)
+elseif creditsmenuactive == true then
+  creditsmenu:update(dt)
+else
+  mainmenu:update(dt)
+end
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   --[[ keep at or under 2048 X 2048]]--
 
 end
 
+<<<<<<< HEAD
 
 
 function movecat()
@@ -323,6 +403,8 @@ end
 
 
 
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
 function loadgame()
   curscore = 0
   world = nil
@@ -421,6 +503,7 @@ end
 
 -- Load
 function love.load()
+<<<<<<< HEAD
  if love.filesystem.isFile("save") == false then
 
    love.filesystem.newFile("save")
@@ -437,12 +520,24 @@ function love.load()
   
   gamemusic = music.new()
 
+=======
+  if love.filesystem.getInfo("save.lua") == nil then
+    love.filesystem.newFile("save.lua")
+  end
+
+  savedata = table.load("save.lua")
+  gamemusic = music.new()
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   if savedata["musicpreference"] ~= nil then
     gamemusic:loadlist(savedata["musicpreference"])
   else
     gamemusic:loadlist(1)
   end
 
+<<<<<<< HEAD
+=======
+  debugtext = savedata
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   preload()
   
 
@@ -452,9 +547,13 @@ end
 -- Quit
 function love.quit()
   if savedata ~= nil then
+<<<<<<< HEAD
    table.save(savedata,"save")
   else
     l = 6/0
+=======
+   table.save(savedata,"save.lua")
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
   end
 
 end
@@ -630,10 +729,15 @@ function loadoptions()
   optionmenu = menu.new()
   optionmenu:addItem{
 		name = 'Cats',
+<<<<<<< HEAD
     action = function()
       makecatsmenu()
       optionsactive = false
       optionmenu.active = false
+=======
+		action = function()
+      
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
       -- revert graphics
       
 		end
@@ -885,6 +989,7 @@ function makecreditsmenu()
 
   creditsmenuactive = true
 
+<<<<<<< HEAD
 end
 
 
@@ -944,4 +1049,6 @@ function makecatsmenu()
 
   catsmenuactive = true
 
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
 end

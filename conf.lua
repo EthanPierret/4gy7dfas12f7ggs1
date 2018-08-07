@@ -14,7 +14,10 @@ function love.conf(t)
   t.author = "CryscalCross Innovations, LLC"
   t.identity = "save"
   t.window.vsync = true
+<<<<<<< HEAD
   t.appendidentity = true
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
 
   t.modules.joystick = false
 end
