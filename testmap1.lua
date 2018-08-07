@@ -213,7 +213,7 @@ return {
             { x = -150, y = 250 },
             { x = 0, y = 200 }
           },
-          properties = {}
+          properties = {1}
         },
         {
           id = 10,
