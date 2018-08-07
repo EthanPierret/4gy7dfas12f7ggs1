@@ -47,29 +47,13 @@ collisionmanager.new = function(id)
   self.id = id
 
 
-
-
-
-
-
-
-
-
-  
   --cat.new = function(x, y, rad, physics)
-  
     
-  se
-  lf.begincollision = function(a,b,coll)
-
-
+  self.begincollision = function(a,b,coll)
 
     love.graphics.setColor(0,0,0,255)
 
-
-    
     local x5,y5 = coll:getNormal()
-    
     debugtext = a:getGroupIndex().." col "..b:getGroupIndex().." of: "..x5..", "..y5
     local indexa = a:getGroupIndex()
     local indexb = b:getGroupIndex()

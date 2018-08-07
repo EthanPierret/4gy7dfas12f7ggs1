@@ -47,18 +47,36 @@ local gameover = false
 
 local loaded = false
 
+<<<<<<< HEAD
 local accum = 0
 local step = 0.016
 
+=======
+<<<<<<< HEAD
+local accum = 0
+local step = 0.016
+
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 
 local creditsmenu
 musicmenuactive = nil
 local musicmenu
 musicmenuactive = nil
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 local catsmenu
 catsmenuactive = nil
 
 local gametimer = 0
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 
 
 mainmap = nil
@@ -79,11 +97,26 @@ savedata = {}
 
 
 --[[
+<<<<<<< HEAD
 ToDo
   Get the camera to go up with cat if the cat moves? But not side to side.
   In Cat : load all cat emotion variations into here, and use a emtion counter in .self
   Make the Cat do a animation when touched.
   
+=======
+
+ToDo
+
+
+  Get the camera to go up with cat if the cat moves? But not side to side.
+  In Cat : load all cat emotion variations into here, and use a emtion counter in .self
+
+
+  Make the Cat do a animation when touched.
+
+  
+
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
   Unfinished:
   Camera
   Map generator
@@ -92,6 +125,11 @@ ToDo
   Cats acheivement/unlock
   Food placement
   Spikey Food
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 ]]--
 
 
@@ -104,7 +142,14 @@ function love.mousepressed(x, y, button, touch)
     if gameactive == true then
     
     if gamecats[1] ~= nil then
+<<<<<<< HEAD
     
+=======
+<<<<<<< HEAD
+    
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
     if (x > gamecats[1].catslist[1].p.body:getX()) then
       gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
       gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
@@ -115,8 +160,16 @@ function love.mousepressed(x, y, button, touch)
       holding = 2
     end
   end
+<<<<<<< HEAD
 
 
+=======
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
   if gameover == true then
     gameovermenu:mousepressed(x,y)
   end 
@@ -128,8 +181,16 @@ function love.mousepressed(x, y, button, touch)
     musicmenu:mousepressed(x,y)
   elseif creditsmenuactive == true then
     creditsmenu:mousepressed(x,y)
+<<<<<<< HEAD
   elseif catsmenuactive == true then
     catsmenu:mousepressed(x,y)
+=======
+<<<<<<< HEAD
+  elseif catsmenuactive == true then
+    catsmenu:mousepressed(x,y)
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
   else
     mainmenu:mousepressed(x,y)
   end
@@ -156,10 +217,19 @@ function love.keypressed(key)
 
   elseif creditsmenuactive == true then
     creditsmenu:keypressed(key)
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 
   elseif catsmenuactive == true then
     catsmenu:keypressed(key)
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
   else
     
   mainmenu:keypressed(key)
@@ -172,6 +242,7 @@ end
 function love.draw()
   if gameactive == true then
   --[[Centered Image]]--
+<<<<<<< HEAD
   
   --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
   
@@ -192,10 +263,177 @@ function love.draw()
     curframe = curframe + 1
     else
     curframe = 1
+=======
+<<<<<<< HEAD
+  
+  --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
+  
+  
+  --[[love.graphics.setColor(0,0,0,255)]]--
+  
+
+  love.graphics.print(debugtext,0,0)
+  love.graphics.print(debugtext2,0,50)
+
+=======
+  love.graphics.draw(image, actframe, imagex, 100)
+  --[[image path, (from where in file x,y) , rotation in radiens, scale x, scale y, draw offset x, draw offset Y]]--
+  love.graphics.draw(image, 500, 400, math.rad(30),0.5, 0.5, halfw, halfh)
+  
+  --[[love.graphics.setColor(0,0,0,255)]]--
+  
+  love.graphics.line(100,100,(love.graphics.getHeight()/2),love.graphics.getWidth()/2)
+
+
+  love.graphics.print(debugtext,0,0)
+  love.graphics.print(debugtext2,0,50)
+
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+  mainmap:draw()
+  maincat:draw(curframe)
+
+  if ( elapsed > (1/6)) then
+    elapsed = 0
+  
+    if ( curframe < 3 ) then
+    curframe = curframe + 1
+    else
+    curframe = 1
     end
     actframe = frames[curframe]
   
   end
+ 
+  if gameover == true then
+  gameovermenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+  end
+
+  elseif optionsactive == true then
+    optionmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+
+
+  elseif musicmenuactive == true then
+    musicmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+
+  elseif creditsmenuactive == true then
+    creditsmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+
+<<<<<<< HEAD
+  elseif catsmenuactive == true then
+    catsmenu:draw(halfw-100/2,halfh-100,100,100,22)
+
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+  else
+  mainmenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+  end
+  
+end
+
+
+
+
+
+<<<<<<< HEAD
+
+-- Update
+function love.update(dt)
+  elapsed = elapsed + dt
+  accum = accum + dt
+  while accum >= step do
+  gamemusic:update()
+  movecat()
+  accum = accum - step 
+  end
+
+  gamemusic:update()
+  movecat()
+  
+  if gameactive == true then
+      if randomseed == 0 then
+      randomseed = elapsed
+      end
+
+      
+
+    if gameover == false then
+      -- process player input here
+      -- update the game logic/simulation
+      
+    
+    end
+    
+  
+
+
+
+=======
+-- Update
+function love.update(dt)
+  gamemusic:update(dt)
+  elapsed = elapsed + dt
+
+
+  if gameactive == true then
+    if randomseed == 0 then
+      randomseed = elapsed
+      end     
+  if gameover == false then
+  if (holding == 1) then
+    gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
+    gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
+  elseif (holding == 2) then
+    gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
+    gamecats[1].catslist[1].p.body:applyAngularImpulse(-2)
+  end 
+  maincat:update(dt) 
+end
+  
+
+
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+  world:update(dt)
+  
+  
+  
+  for f,v in ipairs(destroy_queue) do
+    
+    for h,i in ipairs(destroy_queue[f]) do
+      if destroy_queue[f][2] == -2 then
+        removeshape(destroy_queue[f][1],destroy_queue[f][2],maincat)
+      else
+     removeshape(destroy_queue[f][1],destroy_queue[f][2],mainmap)
+      end 
+<<<<<<< HEAD
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
+    end
+  end
+=======
+      end
+     end
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+      destroy_queue = {}
+
+
+     if gameover == true then
+      gameovermenu:update(dt)
+     end
+  
+  
+  --game.maincat:release() does not have object references set up, only global. maincat.p.prop:destroy() works.
+<<<<<<< HEAD
+  elseif optionsactive == true then
+  optionmenu:update(dt)
+  elseif musicmenuactive == true then
+  musicmenu:update(dt)
+  elseif creditsmenuactive == true then
+  creditsmenu:update(dt)
+  elseif catsmenuactive == true then
+  catsmenu:update(dt)
+  else
+  mainmenu:update(dt)
+  end
+<<<<<<< HEAD
  
   if gameover == true then
   gameovermenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
@@ -290,10 +528,27 @@ function love.update(dt)
   else
   mainmenu:update(dt)
   end
+=======
+=======
+elseif optionsactive == true then
+  optionmenu:update(dt)
+elseif musicmenuactive == true then
+  musicmenu:update(dt)
+elseif creditsmenuactive == true then
+  creditsmenu:update(dt)
+else
+  mainmenu:update(dt)
+end
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
   --[[ keep at or under 2048 X 2048]]--
 
 end
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 
 
 function movecat()
@@ -315,6 +570,11 @@ end
 
 
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 function loadgame()
   curscore = 0
   world = nil
@@ -365,6 +625,7 @@ function loadgame()
   gamemusic:updatevolume(savedata["musicvolume"]/10)
   end
 
+<<<<<<< HEAD
 
     local function makemusic()
     if savedata["musicpreference"] ~= nil then
@@ -437,6 +698,99 @@ function love.load()
 
   preload()
   
+=======
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
+
+    local function makemusic()
+    if savedata["musicpreference"] ~= nil then
+      if savedata["musicvolume"] ~= nil then
+        gamemusic.volume = savedata["musicvolume"]/10
+        gamemusic:playlist(savedata["musicpreference"],1)
+      else
+        gamemusic:playlist(savedata["musicpreference"],1)
+      end
+    
+    else
+      gamemusic:playlist(1,elapsed,1,1)
+    end
+  end
+  if savedata["musicswitch"] ~= nil then
+    if savedata["musicswitch"] == "Off" then
+    else
+    makemusic()
+    end
+  else
+    makemusic()
+  end
+   -- table.save(savedata,"save.lua")
+  end
+
+
+ 
+  
+  -- mainmap = map.new(0,425,1,world,0.2,2)
+  
+  mainmap = map.new(10,300,1,0.4,1,world)
+  maincat = catmanager.new()
+  maincat:newcat(400,800,25,world,1)
+  gamecats[1] = maincat
+  gamecats[1].catslist[1].p.body:applyLinearImpulse(0,-150)
+  
+  
+ -- maincat.obbylist.cats[1].p.body:setFixedRotation(false)
+  loaded = true
+  world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+  gameover = false
+  
+end
+
+
+<<<<<<< HEAD
+-- Quit
+function love.quit()
+  if savedata ~= nil then
+   table.save(savedata,"save")
+=======
+
+-- Load
+function love.load()
+<<<<<<< HEAD
+ if love.filesystem.isFile("save") == false then
+
+   love.filesystem.newFile("save")
+
+ end
+
+ --local d = love.audio.newSource("assets/audio/Tiki-Party.ogg","stream")
+ --d:play()
+  
+  savedata = table.load("save")
+
+
+
+  
+  gamemusic = music.new()
+
+=======
+  if love.filesystem.getInfo("save.lua") == nil then
+    love.filesystem.newFile("save.lua")
+  end
+
+  savedata = table.load("save.lua")
+  gamemusic = music.new()
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+  if savedata["musicpreference"] ~= nil then
+    gamemusic:loadlist(savedata["musicpreference"])
+  else
+    gamemusic:loadlist(1)
+  end
+
+<<<<<<< HEAD
+=======
+  debugtext = savedata
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+  preload()
+  
 
 end
 
@@ -444,7 +798,14 @@ end
 -- Quit
 function love.quit()
   if savedata ~= nil then
+<<<<<<< HEAD
    table.save(savedata,"save")
+  else
+    l = 6/0
+=======
+   table.save(savedata,"save.lua")
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
   end
 
 end
@@ -620,10 +981,21 @@ function loadoptions()
   optionmenu = menu.new()
   optionmenu:addItem{
 		name = 'Cats',
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
     action = function()
       makecatsmenu()
       optionsactive = false
       optionmenu.active = false
+<<<<<<< HEAD
+=======
+=======
+		action = function()
+      
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
       -- revert graphics
       
 		end
@@ -875,6 +1247,10 @@ function makecreditsmenu()
 
   creditsmenuactive = true
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 end
 
 
@@ -934,4 +1310,9 @@ function makecatsmenu()
 
   catsmenuactive = true
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> f97fd8581d772440b2107f69c3f73cbd2f9e4b52
+>>>>>>> 3d1f8196a4b5666c23d25b4f45b8e9cb38c9362a
 end
