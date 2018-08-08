@@ -11,6 +11,8 @@ return {
 			active = true,
 			animOffset = 0,
 			loaded = false,
+			xoff = 0,
+			yoff = 0,
 			load = function(self)
 				self.count = 0
 						for _ in pairs(self.items) do
@@ -19,7 +21,9 @@ return {
 
 				self.loaded = true
 			end,
-			mousepressed = function(self, xt, yt)
+			mousepressed = function(self, xl, yl)
+				local xt = xl + self.xoff
+				local yt = yl + self.yoff
 				if self.active == true then
 				if (xt ~= nil and yt ~= nil) then
 				if (xt >= self.x and xt <= (self.x+self.width)) then

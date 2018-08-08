@@ -12,6 +12,7 @@ require("menumanager")
 local menu =  require("assets.menu")
 local music = require("audiomanager")
 local saves = require("savemanager")
+local camera = require("cameramanager")
 
 local game = {}
 pos = 0
@@ -68,6 +69,7 @@ local catanim
 local sixframe
 local randomseed = 0
 local clostestmouseX
+local gameoverstorage = {}
 
 destroy_queue = {}
 
@@ -185,7 +187,11 @@ function love.draw()
   
   
   --[[love.graphics.setColor(0,0,0,255)]]--
-  
+  if gameover == false then
+    followcat(maincat,1,halfw,halfh)
+  else
+    setcampos(gameoverstorage["x"]-halfw,gameoverstorage["y"]-halfh)
+  end
 
   love.graphics.print(debugtext,0,0)
   love.graphics.print(debugtext2,0,50)
@@ -204,9 +210,11 @@ function love.draw()
     actframe = frames[curframe]
   
   end
+  
  
   if gameover == true then
-  gameovermenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+  local t, y = getposcam()
+  gameovermenu:draw(halfw+t-menuw/2,halfh+y-menuh,menuw,menuh,22)
   end
 
   elseif optionsactive == true then
@@ -326,7 +334,8 @@ end
 function loadgame()
   curscore = 0
   world = nil
-  collisionmanage = nil                                                                    -- LoadGame
+  collisionmanage = nil
+  gameover = false                                                                    -- LoadGame
   image = love.graphics.newImage("test.png")
   frames[1] = love.graphics.newQuad(0,0,128,128, image:getDimensions())
   frames[2] = love.graphics.newQuad(128,128,128,128, image:getDimensions())
@@ -421,7 +430,7 @@ end
 
 -- Load
 function love.load()
- if love.filesystem.isFile("save") == false then
+ if love.filesystem.getInfo("save") == nil then
 
    love.filesystem.newFile("save")
 
@@ -436,6 +445,10 @@ function love.load()
 
   
   gamemusic = music.new()
+  
+  if savedata["musicvolume"] ~= nil then
+    gamemusic:updatevolume(savedata["musicvolume"]/10)
+  end
 
   if savedata["musicpreference"] ~= nil then
     gamemusic:loadlist(savedata["musicpreference"])
@@ -548,7 +561,7 @@ end
 
 function dogameover(id)
   if gameover == false then
-  triggergameover(maincat, world, id, gamemusic)
+  triggergameover(maincat, world, id, gamemusic, gameoverstorage)
   drawgameover(curscore)
   end
 end
@@ -576,6 +589,9 @@ end
 -- Gameover
 function drawgameover(score)
     gameovermenu = menu.new()
+    gameovermenu.yoff = gameoverstorage["y"]
+    gameovermenu.xoff = gameoverstorage["x"]
+
 
     gameover = true
     gameovermenu:addItem{

@@ -78,6 +78,12 @@ new = function()
      -- love.graphics.print(contacts)
     end,
 
+    getxy = function(self)
+      local r self.p.body:getX()
+      local e self.p.body:getY()
+      return r,e
+    end,
+
     destroy = function(self)
         self = nil
     end,
