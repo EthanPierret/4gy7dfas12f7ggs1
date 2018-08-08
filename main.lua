@@ -125,6 +125,7 @@ function love.mousepressed(x, y, button, touch)
       holding = 2
     end
   end
+  debugtext2 = " "..x.."/"..y
 
 
   if gameover == true then
@@ -588,6 +589,7 @@ end
 
 -- Gameover
 function drawgameover(score)
+    if gameovermenu == nil then
     gameovermenu = menu.new()
     gameovermenu.yoff = gameoverstorage["y"]
     gameovermenu.xoff = gameoverstorage["x"]
@@ -631,6 +633,10 @@ function drawgameover(score)
     }
     gameovermenu.active = true
     gameovermenu:load()
+  else
+    gameovermenu.active = true
+    gameover = true
+  end
 end
 
 

@@ -22,8 +22,8 @@ return {
 				self.loaded = true
 			end,
 			mousepressed = function(self, xl, yl)
-				local xt = xl + self.xoff
-				local yt = yl + self.yoff
+				local xt = xl --+ self.xoff*-1
+				local yt = yl --+ self.yoff*-1
 				if self.active == true then
 				if (xt ~= nil and yt ~= nil) then
 				if (xt >= self.x and xt <= (self.x+self.width)) then
