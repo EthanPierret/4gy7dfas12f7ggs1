@@ -153,14 +153,13 @@ function love.mousepressed(x, y, button, touch)
 end
 
 function love.keypressed(key)
-  if gameactive == false then
-
+  if gameactive == true then
+    if gameover == true then
+      gameovermenu:keypressed(key)
+    end
 
   elseif optionsactive == true then
       optionmenu:keypressed(key)
-
-  elseif gameover == true then
-    gameovermenu:keypressed(key)
 
   elseif musicmenuactive == true then
     musicmenu:keypressed(key)
@@ -191,7 +190,8 @@ function love.draw()
   if gameover == false then
     followcat(maincat,1,halfw,halfh)
   else
-    setcampos(gameoverstorage["x"]-halfw,gameoverstorage["y"]-halfh)
+    --setcampos(gameoverstorage["catx"]-halfw,gameoverstorage["caty"]-halfh)
+    setcampos(0,gameoverstorage["caty"]-halfh)
   end
 
   love.graphics.print(debugtext,0,0)
@@ -429,6 +429,7 @@ end
 
 
 
+
 -- Load
 function love.load()
  if love.filesystem.getInfo("save") == nil then
@@ -463,6 +464,9 @@ function love.load()
 end
 
 
+
+
+
 -- Quit
 function love.quit()
   if savedata ~= nil then
@@ -473,6 +477,8 @@ function love.quit()
 
 end
  
+
+
 
 
 function preload()
@@ -509,20 +515,6 @@ function preload()
 
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -591,8 +583,11 @@ end
 function drawgameover(score)
     if gameovermenu == nil then
     gameovermenu = menu.new()
-    gameovermenu.yoff = gameoverstorage["y"]
-    gameovermenu.xoff = gameoverstorage["x"]
+    
+    debugtext = gameovermenu.xoff.."/"..gameovermenu.yoff
+   -- gameoverstorage
+    gameovermenu:isskewed()
+    gameovermenu:setoffs(gameoverstorage["x"],gameoverstorage["y"])
 
 
     gameover = true

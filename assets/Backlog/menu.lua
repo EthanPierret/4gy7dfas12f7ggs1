@@ -32,11 +32,14 @@ return {
 				local yt = yl
 				local xt = xl
 				
+				xt = xl --+ (self.xoff*-1)*2
+				yt = yt + self.yoff   --((self.count)*self.height)--)--*-1)--+(self.yoff/self.height*self.count*2))--*2
+				if self.skewed == true then
+					--yt = yt + (self.height*(self.count+1))
+			    end
 
-
-				xt = xl + self.xoff --+ (self.xoff*-1)*2
-				yt = yt + self.yoff  --((self.count)*self.height)--)--*-1)--+(self.yoff/self.height*self.count*2))--*2
-
+				love.graphics.setColor(0,0,0,255)
+				love.graphics.setColor(128,128,128,255)
 		
 				
 				if (xt >= self.x and xt <= (self.x+self.width)) then
@@ -80,7 +83,11 @@ return {
 				self.width = w
 				self.height = h
 				self.fontsize = f
+				else
+					love.graphics.setColor(0,0,0,255)
 				
+					love.graphics.line(self.x,self.y,self.xoff,self.yoff)
+					love.graphics.setColor(128,128,128,255)
 				end
 
 			    
@@ -89,7 +96,7 @@ return {
 				
 				
 				love.graphics.setColor(0,0,0, 128)
-				if self.selected then
+				if self.selected ~= nil then
 				love.graphics.rectangle('line', x, y + height*(self.selected-1) + (self.animOffset * height), width, height)
 				end
 				love.graphics.setNewFont(fontsize)
@@ -105,11 +112,10 @@ return {
 			end,
 			keypressed = function(self, key)
 				if self.active == true then
-
 					if self.selected == nil then
+						love.event.quit()
 						self.selected = 1
-						key = nil
-						
+						self.animOffset = self.animOffset + (#self.items-1)
 					end
 				if key == 'up' then
 					if self.selected > 1 then
