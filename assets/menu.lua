@@ -109,8 +109,9 @@ return {
 					if self.selected == nil then
 						self.selected = 1
 						key = nil
-						
+		
 					end
+					
 				if key == 'up' then
 					if self.selected > 1 then
 						self.selected = self.selected - 1
