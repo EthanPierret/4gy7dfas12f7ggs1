@@ -38,7 +38,7 @@ new = function()
   self.p.shape = love.physics.newCircleShape(self.rad)
   self.p.prop = love.physics.newFixture(self.p.body, self.p.shape, 1)
   
-  self.p.rects = love.physics.newRectangleShape(0,rad*-1,rad/2,rad-10,0) --(offsetX,offsetY,Width,Height,Angle)
+  self.p.rects = love.physics.newRectangleShape( ((rad-10)/2*-1),rad*-1-1,rad-10,rad/2,0 ) --(offsetX,offsetY,Width,Height,Angle)
   self.p.rectp = love.physics.newFixture(self.p.body, self.p.rects, 0)
   
 
@@ -78,6 +78,12 @@ new = function()
      -- love.graphics.print(contacts)
     end,
 
+    getxy = function(self)
+      local r self.p.body:getX()
+      local e self.p.body:getY()
+      return r,e
+    end,
+
     destroy = function(self)
         self = nil
     end,
@@ -98,6 +104,8 @@ new = function()
       love.graphics.setColor(0,0,0,255)
       
       love.graphics.circle("fill", self.p.body:getX(), self.p.body:getY(), self.rad)
+     
+      --love.graphics.rectangle("line",( (self.rad-10)/2*-1)+self.p.body:getX(),(self.rad*-1-1)+self.p.body:getY(),(self.rad/2),(self.rad-10) )
       love.graphics.setColor(128,128,128,255)
     end 
   }

@@ -18,8 +18,12 @@ set = function(self)
   love.graphics.translate(-self.x, -self.y)
 end,
 
-unset = function(self)
+pop = function(self)
   love.graphics.pop()
+end,
+
+push = function(self)
+  love.graphics.push()
 end,
 
 move = function(self,dx, dy)

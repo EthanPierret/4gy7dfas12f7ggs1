@@ -31,6 +31,10 @@ updatemodel = function(self,frame)
     self.catslist[f]:updatemodel(frame)
 end,
 
+setmode = function(self,arg)
+    self.catslist[f]:changeemotion(arg)
+end,
+
 update = function(self,dt)
     for f,v in ipairs(self.catslist) do
         if self.catslist[f] == nil then
@@ -39,6 +43,28 @@ update = function(self,dt)
         end
     
      end
+end,
+
+getxy = function(self,cat)
+    for f,v in ipairs(self.catslist) do
+        if self.catslist[f] == nil then
+        else
+           return self.catslist[f]:getxy()
+        end
+    
+     end
+end,
+
+gety = function(self)
+
+    for f,v in ipairs(self.catslist) do
+        if self.catslist[f] == nil then
+        else
+           return self.catslist[f].p.body:getY()
+        end
+    
+    end
+
 end,
 
 draw = function(self,arg)

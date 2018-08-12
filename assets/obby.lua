@@ -17,6 +17,11 @@ return {
       self.body = love.physics.newBody(physics,x, y, "static")
     end,
 
+    destroy = function(self)
+      self.body:release()
+      self.body = nil
+    end,
+
 
 
     newshape = function(self, x, y, physics, scale, list1, list2)

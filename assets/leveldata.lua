@@ -1,3 +1,24 @@
+function getfooddata(id)
+  if id == 1 then
+    return {
+      {250,450},
+      {950,700}
+    }
+  end
+end
+
+function getexitid(id)
+  if id == 1 then
+    return 3
+  end
+end
+
+function getmapheight(id)
+  if id == 1 then
+    return 900
+  end
+end
+
 function getmapdata(id)
 
     if id == 1 then

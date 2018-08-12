@@ -12,6 +12,8 @@ require("menumanager")
 local menu =  require("assets.menu")
 local music = require("audiomanager")
 local saves = require("savemanager")
+local camera = require("cameramanager")
+local mapmanager = require("gameobbymanager")
 
 local game = {}
 pos = 0
@@ -68,6 +70,9 @@ local catanim
 local sixframe
 local randomseed = 0
 local clostestmouseX
+local gameoverstorage = {}
+local nomouse
+local catmode = 0
 
 destroy_queue = {}
 
@@ -114,15 +119,18 @@ function love.mousepressed(x, y, button, touch)
     if gamecats[1] ~= nil then
     
     if (x > gamecats[1].catslist[1].p.body:getX()) then
+      nomouse = false
       gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
       gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
       holding = 1
     else
+      nomouse = false
       gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
       gamecats[1].catslist[1].p.body:applyTorque(-2)
       holding = 2
     end
   end
+  debugtext2 = " "..x.."/"..y
 
 
   if gameover == true then
@@ -145,19 +153,19 @@ function love.mousepressed(x, y, button, touch)
   function love.mousereleased(x, y, button, touch)
     
     holding = 0
+    nomouse = true
     
   end
 end
 
 function love.keypressed(key)
-  if gameactive == false then
-
+  if gameactive == true then
+    if gameover == true then
+      gameovermenu:keypressed(key)
+    end
 
   elseif optionsactive == true then
       optionmenu:keypressed(key)
-
-  elseif gameover == true then
-    gameovermenu:keypressed(key)
 
   elseif musicmenuactive == true then
     musicmenu:keypressed(key)
@@ -176,6 +184,11 @@ end
 
 
 
+
+
+
+
+
 -- Draw
 function love.draw()
   if gameactive == true then
@@ -185,7 +198,12 @@ function love.draw()
   
   
   --[[love.graphics.setColor(0,0,0,255)]]--
-  
+  if gameover == false then
+    followcat(maincat,1,halfw,halfh)
+  else
+    --setcampos(gameoverstorage["catx"]-halfw,gameoverstorage["caty"]-halfh)
+    setcampos(0,gameoverstorage["caty"]-halfh)
+  end
 
   love.graphics.print(debugtext,0,0)
   love.graphics.print(debugtext2,0,50)
@@ -204,9 +222,11 @@ function love.draw()
     actframe = frames[curframe]
   
   end
+  
  
   if gameover == true then
-  gameovermenu:draw(halfw-menuw/2,halfh-menuh,menuw,menuh,22)
+  local t, y = getposcam()
+  gameovermenu:draw(halfw+t-menuw/2,halfh+y-menuh,menuw,menuh,22)
   end
 
   elseif optionsactive == true then
@@ -234,8 +254,10 @@ end
 
 
 -- Update
+
 function love.update(dt)
   elapsed = elapsed + dt
+
   accum = accum + dt
   while accum >= step do
   gamemusic:update()
@@ -249,6 +271,7 @@ function love.update(dt)
   if gameactive == true then
       if randomseed == 0 then
       randomseed = elapsed
+      --mainmap:setseed(randomseed)
       end
 
       
@@ -256,15 +279,33 @@ function love.update(dt)
     if gameover == false then
       -- process player input here
       -- update the game logic/simulation
-      
-    
+    if love.keyboard.isDown("right") then
+      holding = 1
+    elseif love.keyboard.isDown("left") then
+      holding = 2
+    elseif nomouse == true then
+      holding = 0
+    end
     end
     
   
 
-
+  if catmode ~= 0 then
+  elseif catmode == 1 then
+    maincat:eat()
+    catmode = 0
+  elseif catmode == 2 then
+    maincat:anim()
+    catmode = 0
+  end
 
   world:update(dt)
+
+
+  --mainmap update
+  if maincat:gety() ~= nil and gameover == false then
+  mainmap:update(maincat:gety())
+  end
   
   
   
@@ -274,7 +315,8 @@ function love.update(dt)
       if destroy_queue[f][2] == -2 then
         removeshape(destroy_queue[f][1],destroy_queue[f][2],maincat)
       else
-     removeshape(destroy_queue[f][1],destroy_queue[f][2],mainmap)
+      mainmap:removeshape(destroy_queue[f][1],destroy_queue[f][2],destroy_queue[f][3])
+      
       end 
     end
   end
@@ -326,7 +368,8 @@ end
 function loadgame()
   curscore = 0
   world = nil
-  collisionmanage = nil                                                                    -- LoadGame
+  collisionmanage = nil
+  gameover = false                                                                    -- LoadGame
   image = love.graphics.newImage("test.png")
   frames[1] = love.graphics.newQuad(0,0,128,128, image:getDimensions())
   frames[2] = love.graphics.newQuad(128,128,128,128, image:getDimensions())
@@ -351,14 +394,14 @@ function loadgame()
   -- bouncy
   -- maincat = cat.new(200,400,25,world)
   floor.prop:setRestitution(0)
-
+  --[[
   local ceiling = {}
   ceiling.body = love.physics.newBody(world ,love.graphics.getWidth()/2,0-50)
   ceiling.shape = love.physics.newRectangleShape(love.graphics.getWidth()*5, 2)
   ceiling.prop = love.physics.newFixture(ceiling.body,ceiling.shape)
   ceiling.prop:setUserData("ceiling")
   ceiling.prop:setGroupIndex(-5)
-  
+  ]]--
 
  -- music trigger
   if loaded == false then
@@ -403,7 +446,8 @@ function loadgame()
   
   -- mainmap = map.new(0,425,1,world,0.2,2)
   
-  mainmap = map.new(10,300,1,0.4,1,world)
+  mainmap = mapmanager.new()
+  mainmap:setworld(world)
   maincat = catmanager.new()
   maincat:newcat(400,800,25,world,1)
   gamecats[1] = maincat
@@ -419,9 +463,10 @@ end
 
 
 
+
 -- Load
 function love.load()
- if love.filesystem.isFile("save") == false then
+ if love.filesystem.getInfo("save") == nil then
 
    love.filesystem.newFile("save")
 
@@ -436,6 +481,10 @@ function love.load()
 
   
   gamemusic = music.new()
+  
+  if savedata["musicvolume"] ~= nil then
+    gamemusic:updatevolume(savedata["musicvolume"]/10)
+  end
 
   if savedata["musicpreference"] ~= nil then
     gamemusic:loadlist(savedata["musicpreference"])
@@ -447,6 +496,9 @@ function love.load()
   
 
 end
+
+
+
 
 
 -- Quit
@@ -461,33 +513,41 @@ end
  
 
 
+
+
 function preload()
   love.graphics.setDefaultFilter("nearest","nearest")
   love.graphics.setBackgroundColor(255,255,255,255)
   
   mainmenu = menu.new()
   mainmenu:addItem{
+    {
 		name = 'Start Game',
 		action = function()
       gameactive = true
       -- revert graphics
       love.graphics.setColor(255, 255, 255, 128)
       loadgame()
-		end
+    end
+  }
 	}
 	mainmenu:addItem{
+    {
 		name = 'Options',
 		action = function()
       optionsactive = true
       mainmenu.active = false
       loadoptions()
-		end
+    end
+  }
 	}
 	mainmenu:addItem{
+    {
 		name = 'Quit',
 		action = function()
 			love.event.quit()
-		end
+    end
+  }
 	}
   mainmenu:load()
   
@@ -502,24 +562,13 @@ end
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function beginContact(a, b, coll)
   
   
-  begincollision(a,b,coll)
+  if begincollision(a,b,coll) == "food" then
+  catmode = 1
+  curscore = curscore + 25
+  end
   --local x5,y5 = coll:getNormal()
   
 end
@@ -548,7 +597,7 @@ end
 
 function dogameover(id)
   if gameover == false then
-  triggergameover(maincat, world, id, gamemusic)
+  triggergameover(maincat, world, id, gamemusic, gameoverstorage)
   drawgameover(curscore)
   end
 end
@@ -575,26 +624,38 @@ end
 
 -- Gameover
 function drawgameover(score)
+    if gameovermenu == nil then
     gameovermenu = menu.new()
+    
+    debugtext = gameovermenu.xoff.."/"..gameovermenu.yoff
+   -- gameoverstorage
+    gameovermenu:isskewed()
+    gameovermenu:setoffs(gameoverstorage["x"],gameoverstorage["y"])
+
 
     gameover = true
     gameovermenu:addItem{
+      {
           name = 'You Suck!',
           action = function()
         
         -- revert graphics
         
           end
+        }
       }
       gameovermenu:addItem{
+        {
         name = 'Score: '..score,
         action = function()
       
       -- revert graphics
       
         end
+      }
     }
       gameovermenu:addItem{
+        {
           name = 'Retry',
           action = function()
         gamecleanup()
@@ -602,8 +663,10 @@ function drawgameover(score)
         gameovermenu.active = false
         loadgame()
           end
+        }
       }
       gameovermenu:addItem{
+        {
           name = 'Quit',
           action = function()
             gameactive = false
@@ -612,9 +675,17 @@ function drawgameover(score)
         gameovermenu.active = false
         preload()
           end
+        }
     }
     gameovermenu.active = true
     gameovermenu:load()
+    
+  else
+    gameovermenu:updatename(2, 'Score: '..score)
+    gameovermenu.active = true
+    gameover = true
+    
+  end
 end
 
 
@@ -628,7 +699,9 @@ end
 -- Options
 function loadoptions()
   optionmenu = menu.new()
+  
   optionmenu:addItem{
+    {
 		name = 'Cats',
     action = function()
       makecatsmenu()
@@ -636,18 +709,22 @@ function loadoptions()
       optionmenu.active = false
       -- revert graphics
       
-		end
+    end
+  }
 	}
 	optionmenu:addItem{
+    {
 		name = 'Credits',
     action = function()
       makecreditsmenu()
       optionsactive = false
       optionmenu.active = false
       
-		end
+    end
+  }
   }
   optionmenu:addItem{
+    {
 		name = 'Music',
 		action = function()
       makemusicmenu()
@@ -655,16 +732,19 @@ function loadoptions()
       optionmenu.active = false
       musicmenuactive = true
       
-		end
+    end
+  }
 	}
 	optionmenu:addItem{
+    {
 		name = 'Back',
 		action = function()
       optionmenu.active = false
       optionsactive = false
       mainmenu.active = true
       musicmenuactive = false
-		end
+    end
+  }
   }
   
   optionmenu:load()
@@ -709,6 +789,7 @@ function makemusicmenu()
     end
   end
   musicmenu:addItem{
+    {
   name = 'Music Preference: '..r,
   action = function()
     if savedata["musicpreference"] ~= nil then
@@ -748,7 +829,9 @@ function makemusicmenu()
     musicmenu:updatename(1,r)
   end
 }
+}
   musicmenu:addItem{
+    {
   name = 'Volume: '..l,
   action = function()
     if savedata["musicvolume"] ~= nil then
@@ -778,7 +861,9 @@ function makemusicmenu()
   gamemusic:updatevolume(savedata["musicvolume"]/10)
   end
 }
+}
 musicmenu:addItem{
+  {
   name = 'Music: '..m,
   action = function()
     if savedata["musicswitch"] ~= nil then
@@ -804,7 +889,9 @@ musicmenu:addItem{
     
   end
 }
+}
   musicmenu:addItem{
+    {
   name = 'Back',
   action = function()
           
@@ -815,6 +902,7 @@ musicmenu:addItem{
           creditsmenuactive = false
           
   end
+}
   }
 
 musicmenu:load()
@@ -841,28 +929,35 @@ function makecreditsmenu()
     creditsmenu = menu.new()
 
     creditsmenu:addItem{
+      {
           name = 'Credits',
           action = function()
         
         -- revert graphics
         
           end
+        }
       }
       creditsmenu:addItem{
+        {
         name = 'Music by Eric Matyas',
         action = function()
       
       -- revert graphics
       
         end
+      }
     }
     creditsmenu:addItem{
+      {
           name = 'www.   soundimage   .org',
           action = function()
  
           end
+        }
       }
       creditsmenu:addItem{
+        {
           name = 'Back',
           action = function()
             creditsmenu.active = false
@@ -873,6 +968,7 @@ function makecreditsmenu()
 
       
           end
+        }
     }
     creditsmenu.active = true
     creditsmenu:load()
@@ -896,43 +992,147 @@ end
 function makecatsmenu()
   if catsmenu == nil then
     catsmenu = menu.new()
-
+    catsmenu:setscreen(halfh*2,halfw*2)
+    catsmenu:setcolums(3)
+    if savedata["cat"] ~= nil then
+    else
+      savedata["cat"] = 1
+    end
+    catsmenu.selected = math.ceil(savedata["cat"]/3)
+    catsmenu.selected2 = savedata["cat"] - ((catsmenu.selected-1)*3)
     catsmenu:addItem{
-          name = 'Blusie       SweetSugar       Nebula',
+      {
+          othernames = {
+          'Blusie',
+          "Purrey", --SweetSugar
+          "Nebula"
+         
+          },
           action = function()
+            savedata["cat"] = 1
         
         -- revert graphics
         
+        
+          end
+      },
+      {
+        action = function()
+          savedata["cat"] = 2
+        
+          -- revert graphics
+          
+          
+            end
+      },
+      {
+      action = function()
+        savedata["cat"] = 3
+        
+        -- revert graphics
+
+        
           end
       }
+    }
     catsmenu:addItem{
-          name = 'SweetPea     PumkinSpice   Sweetsy',
+      {
+          othernames = {
+          'SweetPea',
+          "PumkinSpice",
+          "Sweetsy"
+    
+        },
         action = function()
+          savedata["cat"] = 4
       
       -- revert graphics
       
         end
+      },
+      {
+        action = function()
+          savedata["cat"] = 5
+      
+        -- revert graphics
+          
+        end
+      },
+      {
+
+        action = function()
+          savedata["cat"] = 6
+      
+      -- revert graphics
+      
+        end
+      }
     }
+    
     catsmenu:addItem{
-          name = 'GoldenCakes   ButterBall     Starlight',
+      {
+          othernames = {
+            'GoldenCakes',
+            "ButterBall",
+            "Starlight"
+          },
           action = function()
+            savedata["cat"] = 7
+
+            
  
           end
-      }
+        },
+            {
+              action = function()
+            
+              -- revert graphics
+              savedata["cat"] = 8
+                
+              end
+            },
+            {
+      
+              action = function()
+
+              savedata["cat"] = 9
+            -- revert graphics
+            
+              end
+            }
+          }
+
     catsmenu:addItem{
+      {
           name = 'Back',
           action = function()
-            creditsmenuactive = false
-            optionmenu.active = true
-            optionsactive = true
-            musicmenuactive = false
-            catsmenu.active = false
-            catsmenuactive = false
             
 
       
           end
-    }
+        },
+          {
+            action = function()
+          
+              creditsmenuactive = false
+              optionmenu.active = true
+              optionsactive = true
+              musicmenuactive = false
+              catsmenu.active = false
+              catsmenuactive = false
+              
+            end
+          },
+          {
+    
+            action = function()
+          
+          -- revert graphics
+          
+            end
+          }
+        }
+
     catsmenu.active = true
     catsmenu:load()
 

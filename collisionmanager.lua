@@ -11,17 +11,18 @@ begincollision = function(a,b,coll)
     local indexb = b:getGroupIndex()
     if indexa == -3 or indexb == -3 then
       if indexa == -4 then
-        debugtext2 = a:getUserData( )
-        table.insert(destroy_queue, {a:getUserData( ), -4})
+        
+        table.insert(destroy_queue, {a:getUserData( ), -4, a:getBody():getUserData()})
         a:getBody():release() -- works.
+        return "food"
         
         
       end
       if indexb == -4 then
-        debugtext2 = b:getUserData( )
-        table.insert(destroy_queue, {b:getUserData( ), -4})
-        b:getBody():release()
         
+        table.insert(destroy_queue, {b:getUserData( ), -4, b:getBody():getUserData()})
+        b:getBody():release()
+        return "food"
   
       end
   end
@@ -39,7 +40,7 @@ begincollision = function(a,b,coll)
    end
 
   end
-
+  return false
 end
 
 collisionmanager.new = function(id)
