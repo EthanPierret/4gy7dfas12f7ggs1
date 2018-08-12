@@ -13,6 +13,7 @@ local menu =  require("assets.menu")
 local music = require("audiomanager")
 local saves = require("savemanager")
 local camera = require("cameramanager")
+local mapmanager = require("gameobbymanager")
 
 local game = {}
 pos = 0
@@ -71,6 +72,7 @@ local randomseed = 0
 local clostestmouseX
 local gameoverstorage = {}
 local nomouse
+local catmode = 0
 
 destroy_queue = {}
 
@@ -252,8 +254,10 @@ end
 
 
 -- Update
+
 function love.update(dt)
   elapsed = elapsed + dt
+
   accum = accum + dt
   while accum >= step do
   gamemusic:update()
@@ -267,6 +271,7 @@ function love.update(dt)
   if gameactive == true then
       if randomseed == 0 then
       randomseed = elapsed
+      --mainmap:setseed(randomseed)
       end
 
       
@@ -285,9 +290,22 @@ function love.update(dt)
     
   
 
-
+  if catmode ~= 0 then
+  elseif catmode == 1 then
+    maincat:eat()
+    catmode = 0
+  elseif catmode == 2 then
+    maincat:anim()
+    catmode = 0
+  end
 
   world:update(dt)
+
+
+  --mainmap update
+  if maincat:gety() ~= nil and gameover == false then
+  mainmap:update(maincat:gety())
+  end
   
   
   
@@ -297,7 +315,8 @@ function love.update(dt)
       if destroy_queue[f][2] == -2 then
         removeshape(destroy_queue[f][1],destroy_queue[f][2],maincat)
       else
-     removeshape(destroy_queue[f][1],destroy_queue[f][2],mainmap)
+      mainmap:removeshape(destroy_queue[f][1],destroy_queue[f][2],destroy_queue[f][3])
+      
       end 
     end
   end
@@ -375,14 +394,14 @@ function loadgame()
   -- bouncy
   -- maincat = cat.new(200,400,25,world)
   floor.prop:setRestitution(0)
-
+  --[[
   local ceiling = {}
   ceiling.body = love.physics.newBody(world ,love.graphics.getWidth()/2,0-50)
   ceiling.shape = love.physics.newRectangleShape(love.graphics.getWidth()*5, 2)
   ceiling.prop = love.physics.newFixture(ceiling.body,ceiling.shape)
   ceiling.prop:setUserData("ceiling")
   ceiling.prop:setGroupIndex(-5)
-  
+  ]]--
 
  -- music trigger
   if loaded == false then
@@ -427,7 +446,8 @@ function loadgame()
   
   -- mainmap = map.new(0,425,1,world,0.2,2)
   
-  mainmap = map.new(10,300,1,0.4,1,world)
+  mainmap = mapmanager.new()
+  mainmap:setworld(world)
   maincat = catmanager.new()
   maincat:newcat(400,800,25,world,1)
   gamecats[1] = maincat
@@ -545,7 +565,10 @@ end
 function beginContact(a, b, coll)
   
   
-  begincollision(a,b,coll)
+  if begincollision(a,b,coll) == "food" then
+  catmode = 1
+  curscore = curscore + 25
+  end
   --local x5,y5 = coll:getNormal()
   
 end
@@ -656,9 +679,12 @@ function drawgameover(score)
     }
     gameovermenu.active = true
     gameovermenu:load()
+    
   else
+    gameovermenu:updatename(2, 'Score: '..score)
     gameovermenu.active = true
     gameover = true
+    
   end
 end
 
@@ -968,16 +994,22 @@ function makecatsmenu()
     catsmenu = menu.new()
     catsmenu:setscreen(halfh*2,halfw*2)
     catsmenu:setcolums(3)
-
+    if savedata["cat"] ~= nil then
+    else
+      savedata["cat"] = 1
+    end
+    catsmenu.selected = math.ceil(savedata["cat"]/3)
+    catsmenu.selected2 = savedata["cat"] - ((catsmenu.selected-1)*3)
     catsmenu:addItem{
       {
           othernames = {
           'Blusie',
-          "SweetSugar",
+          "Purrey", --SweetSugar
           "Nebula"
          
           },
           action = function()
+            savedata["cat"] = 1
         
         -- revert graphics
         
@@ -986,6 +1018,7 @@ function makecatsmenu()
       },
       {
         action = function()
+          savedata["cat"] = 2
         
           -- revert graphics
           
@@ -994,6 +1027,7 @@ function makecatsmenu()
       },
       {
       action = function()
+        savedata["cat"] = 3
         
         -- revert graphics
 
@@ -1010,6 +1044,7 @@ function makecatsmenu()
     
         },
         action = function()
+          savedata["cat"] = 4
       
       -- revert graphics
       
@@ -1017,6 +1052,7 @@ function makecatsmenu()
       },
       {
         action = function()
+          savedata["cat"] = 5
       
         -- revert graphics
           
@@ -1025,6 +1061,7 @@ function makecatsmenu()
       {
 
         action = function()
+          savedata["cat"] = 6
       
       -- revert graphics
       
@@ -1040,6 +1077,9 @@ function makecatsmenu()
             "Starlight"
           },
           action = function()
+            savedata["cat"] = 7
+
+            
  
           end
         },
@@ -1047,13 +1087,15 @@ function makecatsmenu()
               action = function()
             
               -- revert graphics
+              savedata["cat"] = 8
                 
               end
             },
             {
       
               action = function()
-            
+
+              savedata["cat"] = 9
             -- revert graphics
             
               end
