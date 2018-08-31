@@ -15,6 +15,7 @@ function love.conf(t)
   t.identity = "save"
   t.window.vsync = true
   t.appendidentity = true
+  t.console = true
 
   t.modules.joystick = false
 end

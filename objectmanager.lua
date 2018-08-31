@@ -15,11 +15,12 @@ require("assets.cat"),
 require("assets.food"),
 require("assets.leveldata"),
 require("assets.logic"),
+food = 0,
   
 
 
 
- load = function(self,x, y, idmap,scale, id, world)
+ load = function(self,x, y, idmap,scale, id, world,flip)
   self.physics = world
   local obby = require("assets.obby")
   
@@ -28,6 +29,15 @@ require("assets.logic"),
     obbys = {}
 }
 
+  if flip == 1 then
+    self.flip = 1
+  else
+    self.flip = -1
+  end
+
+  if self.flip == 1 then
+  --love.event.quit()
+  end
 
   self.x = x
   self.y = y
@@ -41,32 +51,110 @@ require("assets.logic"),
   local obbyids = getlistlenth(self.obbylist.obbys)
   self.mapdata = getmapdata(idmap)
   self.fooddata = getfooddata(idmap)
-  self.h = getmapheight(idmap)*self.scale
-  self.e = getexitid(idmap)
+  self.spikeydata = getspikeydata(idmap)
+  self.height = (getmapheight(idmap))*self.scale
+  self.enter, self.exit = getexitid(idmap)
+
+  if self.flip == -1 then
+  if self.exit == 1 then
+  self.exit = 3
+  elseif self.exit == 3 then
+  self.exit = 1
+  end
+  end
             --- Map definition
 
     self.obbylist.obbys[obbyids+1] = obby.new(self.x, self.y, self.physics)
     self.obbylist.obbys[obbyids+1]:newbody(self.x, self.y, self.physics)
+    local foodpos
+    local spikeypos
 
+    if self.fooddata ~= nil then
+    foodpos = self.fooddata[math.random(1,#self.fooddata)]
+    end
 
-    local foodpos = self.fooddata[math.random(1,#self.fooddata)]
+    if self.spikeydata ~= nil then
+    spikeypos = self.spikeydata[math.random(1,#self.spikeydata)]
+    end
+
     --for g, j in ipairs(self.fooddata) do
      
     --end
+
+
     
-    foodpos[1] = foodpos[1] * self.scale
-    foodpos[2] = foodpos[2] * self.scale
-    foodpos[1] = foodpos[1] + self.x
-    foodpos[2] = foodpos[2] + self.y
+    
+    
+    if foodpos ~= nil then
+        
+        if math.random(1,4) ~= 4 then
+        print("Making Real food")
+        self.food = self.food+1
+        foodpos["x"] = foodpos["x"] * self.flip
+        foodpos["x"] = foodpos["x"] + 600
 
-    self.obbylist.food[foodids+1] = food.new(foodpos[1], foodpos[2],25,self.physics,foodids+1,self.id)
+        foodpos["x"] = foodpos["x"] * self.scale
+        foodpos["y"] = foodpos["y"] * self.scale
+        foodpos["x"] = foodpos["x"] + self.x
+        foodpos["y"] = foodpos["y"] + self.y
+        self.obbylist.food[foodids+1] = food.new(foodpos["x"], foodpos["y"],25,self.physics,foodids+1, self.id, 1) -- fixture(self.id), body(1)
+        
+        end
+        
+    end
 
+    if spikeypos ~= nil then
 
+        if math.random(1,4) == 4 then
+            print("Making Spikey food")
+            self.food = self.food+1
+            spikeypos["x"] = spikeypos["x"] * self.flip
+            spikeypos["x"] = spikeypos["x"] + 600
 
-    for f,v in ipairs(self.mapdata) do
-        if self.mapdata[f] ~= nil then
-            local templist = self.mapdata[f]["data"]
-            local temp2 = self.mapdata[f]["off"]
+            spikeypos["x"] = spikeypos["x"] * self.scale
+            spikeypos["y"] = spikeypos["y"] * self.scale
+            spikeypos["x"] = spikeypos["x"] + self.x
+            spikeypos["y"] = spikeypos["y"] + self.y
+        if self.obbylist.food[foodids+1] == nil then
+            self.obbylist.food[foodids+1] = 0
+        end
+        self.obbylist.food[foodids+2] = food.new(spikeypos["x"], spikeypos["y"],25, self.physics, foodids+2, self.id, 2) -- fixture(self.id), body(2)
+        end
+        
+    end
+--[[
+    if self.mapdata["objects"] ~= nil then
+        local templisty = { off = {}, data = {}}
+        templisty["off"][1] = self.mapdata["objects"]["x"]
+        templisty["off"][2] = self.mapdata["objects"]["y"]
+        for l, o in ipairs(self.mapdata["objects"])
+        for _, k in ipairs(self.mapdata["objects"][l]["polygon"])
+        table.insert(templisty["data"],self.mapdata["objects"]["polygon"][_]["x"])
+        table.insert(templisty["data"],self.mapdata["objects"]["polygon"][_]["y"])
+        end
+    end
+    self.mapdata = templisty
+
+    end
+]]--
+    for f,v in ipairs(self.mapdata["objects"]) do
+        local templisty = { off = {x = nil, y = nil}, data = {}}
+        if self.mapdata["objects"][f] ~= nil then
+            
+
+                templisty["off"]["x"] = self.mapdata["objects"][f]["x"]*self.flip
+                templisty["off"]["y"] = self.mapdata["objects"][f]["y"]
+
+                for z, k in ipairs(self.mapdata["objects"][f]["polygon"]) do
+                
+                table.insert(templisty["data"], (self.mapdata["objects"][f]["polygon"][z]["x"]*self.flip)+600)
+                table.insert(templisty["data"], self.mapdata["objects"][f]["polygon"][z]["y"])
+                end
+
+                self.mapdata["objects"][f] = templisty
+
+            local templist = self.mapdata["objects"][f]["data"]
+            local temp2 = self.mapdata["objects"][f]["off"]
             
             for _,v in pairs(templist) do
         
@@ -88,7 +176,7 @@ require("assets.logic"),
         templist[f] = templist[f] + temp2["y"]
         --love.graphics.setColor(255,255,255,128)
         else
-          templist[f] = templist[f] + temp2["x"]
+        templist[f] = templist[f] + temp2["x"]
         end
     end
     local templist2 = {}
@@ -99,26 +187,32 @@ require("assets.logic"),
       end
             
             
-            self.obbylist.obbys[obbyids+1]:newshape(self.mapdata[f]["off"]["x"], self.mapdata[f]["off"]["y"], self.physics, self.scale, templist, templist2)
+            self.obbylist.obbys[obbyids+1]:newshape(self.mapdata["objects"][f]["off"]["x"], self.mapdata["objects"][f]["off"]["y"], self.physics, self.scale, templist, templist2)
     end
 end
 end,
 
 removeshape = function(self,id, ind)
-    
+    print(id)
     if ind == -4 then
-     
-         --list.obbylist.food[id]:destroy()
          
-         table.remove(self.obbylist.food, id)
+         --list.obbylist.food[id]:destroy()
+         self.obbylist.food[id] = 0
+         --table.remove(self.obbylist.food, id)
+
+    elseif ind == -6 then
+        
+        --table.remove(self.obbylist.food, id)
+        self.obbylist.food[id] = 0
  
     elseif ind == -5 then
          
-     table.remove(self.obbylist.obbys, id)
- 
+     --table.remove(self.obbylist.obbys, id)
+     self.obbylist.obbys[id] = 0
     elseif ind == -2 then
  
-     table.remove(self.catslist, id)
+     --table.remove(self.catslist, id)
+     self.catslist[id] = 0
  
     end
  
@@ -126,15 +220,21 @@ removeshape = function(self,id, ind)
     self.destroying = false
  end,
 
+
+
 destroy = function(self)
     
     for i,j in ipairs(self.obbylist.obbys) do
+    if self.obbylist.obbys[i] ~= 0 then
     self.obbylist.obbys[i]:destroy()
     table.remove( self.obbylist.obbys, i )
     end
+    end
     for j,f in ipairs(self.obbylist.food) do
+    if self.obbylist.food[j] ~= 0 then
     self.obbylist.food[j]:destroy()
     table.remove( self.obbylist.food, j )
+    end
     end
     self = nil
 end,
@@ -142,19 +242,17 @@ end,
 draw = function(self)
 
 for f,v in ipairs(self.obbylist.obbys) do
-    if self.obbylist.obbys[f] == nil then
-    else
-    self.obbylist.obbys[f]:draw()
+    if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
+        self.obbylist.obbys[f]:draw()
     end
   
 end
 
 
 for f,v in ipairs(self.obbylist.food) do
-    if self.obbylist.food[f] == nil then
-
-    else
-    self.obbylist.food[f]:draw()
+    if self.obbylist.food[f] ~= nil and self.obbylist.food[f] ~= 0 then
+        self.obbylist.food[f]:draw()
+    
     end
   
 end

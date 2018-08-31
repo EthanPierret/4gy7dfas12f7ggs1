@@ -12,6 +12,7 @@ return{
             timer = 0,
             volume = 1,
             pitch = nil,
+            sfx=nil,
 
         load = function(self, songid, volume, pitch)
             if songid == 1 then
@@ -76,13 +77,51 @@ return{
 
 
         loadsfx = function(self,volume,pitch)
+            if self.storage["sfx"] == nil then
             self.storage["sfx"] = {}
+            end
 
             self.storage["sfx"]["suck"] = love.audio.newSource("assets/audio/yousuck.wav","stream")
+            self.storage["sfx"]["inflate"] = love.audio.newSource("assets/audio/wave.wav","stream")
+            self.storage["sfx"]["wave"] = love.audio.newSource("assets/audio/wave.wav","stream")
+            self.storage["sfx"]["butterball"] = {}
+            self.storage["sfx"]["cute"] = {}
+            self.storage["sfx"]["relaxed"] = {}
+            self.storage["sfx"]["high"] = {}
+            self.storage["sfx"]["butterball"][1] = love.audio.newSource("assets/audio/cats/Butterball1.wav","stream")
+            self.storage["sfx"]["butterball"][2] = love.audio.newSource("assets/audio/cats/Butterball2.wav","stream")
+            self.storage["sfx"]["butterball"][3] = love.audio.newSource("assets/audio/cats/Butterball3.wav","stream")
+            self.storage["sfx"]["butterball"][4] = love.audio.newSource("assets/audio/cats/Butterball4.wav","stream")
+            self.storage["sfx"]["cute"][1] = love.audio.newSource("assets/audio/cats/Cute1.wav","stream")
+            self.storage["sfx"]["cute"][2] = love.audio.newSource("assets/audio/cats/Cute2.wav","stream")
+            self.storage["sfx"]["relaxed"][1] = love.audio.newSource("assets/audio/cats/Relaxed1.wav","stream")
+            self.storage["sfx"]["relaxed"][2] = love.audio.newSource("assets/audio/cats/Relaxed2.wav","stream")
+            self.storage["sfx"]["high"][1] = love.audio.newSource("assets/audio/cats/High1.wav","stream")
+            self.storage["sfx"]["high"][2] = love.audio.newSource("assets/audio/cats/High2.wav","stream")
+            self.storage["sfx"]["high"][3] = love.audio.newSource("assets/audio/cats/High3.wav","stream")
+            self.storage["sfx"]["high"][4] = love.audio.newSource("assets/audio/cats/High4.wav","stream")
+
         end,
         playsfx = function(self,id)
             self.storage["sfx"][id]:play()
         end,
+        quesfx = function(self,id,type)
+            if self.sfx ~= nil then
+                if self.sfx:isPlaying() == false and type == 1 then
+                    self.sfx = self.storage["sfx"][id]
+                    self.sfx:play()
+                elseif self.sfx:isPlaying() == false and type == 2 then
+                    self.sfx = self.storage["sfx"][id][math.random(1,#self.storage["sfx"][id])]
+                    self.sfx:play()
+                end
+            elseif type == 1 then
+            self.sfx = self.storage["sfx"][id]
+            self.sfx:play()
+            else
+                self.sfx = self.storage["sfx"][id][math.random(1,#self.storage["sfx"][id])]
+                self.sfx:play()
+            end
+        end ,
 
         startstop = function(self,play)
             if self.song ~= nil then
@@ -95,7 +134,7 @@ return{
                 self.song:play()
                 self.playing = true
             end
-        else
+        elseif self.storage[self.id] ~= nil then
             self.song = self.storage[self.id][1]
         end
 
@@ -105,7 +144,7 @@ return{
             self.id = id
             if self.song then
             self.song:stop()
-            else
+            elseif self.storage[self.id] ~= nil then
                 self.song = self.storage[self.id][1]
             end
             for i, k in ipairs(self.storage) do
@@ -126,6 +165,7 @@ return{
         end
         end,
         update = function(self)
+            
             if self.timer > 1 then
                 self.timer = 0
                 if self.song ~= nil then
@@ -142,7 +182,7 @@ return{
 
                     end
                 else
-                self:updatelist(self.id)
+                --self:updatelist(self.id)
                 end
             else
             self.timer = self.timer + 0.016
@@ -159,7 +199,6 @@ return{
             self.id = id
             
             local r = math.random(1,len)
-                debugtext2 = r
             for i, j in ipairs(self.storage[id]) do
                 self.storage[id][i]:setVolume(self.volume)
                 self.storage[id][i]:setVolumeLimits(0,self.volume)

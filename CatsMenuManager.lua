@@ -8,17 +8,18 @@ return{
             timer = 0,
             active = true,
             
-            load = function(self)
-                self.catslist[1] = require("assets/cats/bluecat")
+            load = function(self,halfw,halfh)
+                --self.halfh
+                --self.halfw
             end,
-
+            
             draw = function(self)
                 self.width = 330  
                 self.height = 330 
 
-                love.graphics.draw(self.catslist[1],self.animation1.quads[self.actframe],(self.p.body:getX()),(self.p.body:getY())
+                
                 -- OR
-                video = love.graphics.newVideo( filename )
+                --video = love.graphics.newVideo( filename )
                 
             end,
 

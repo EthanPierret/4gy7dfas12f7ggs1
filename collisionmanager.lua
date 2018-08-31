@@ -6,22 +6,30 @@ begincollision = function(a,b,coll)
     love.graphics.setColor(0,0,0,255)
 
     local x5,y5 = coll:getNormal()
-    debugtext = a:getGroupIndex().." col "..b:getGroupIndex().." of: "..x5..", "..y5
+    --debugtext = a:getGroupIndex().." col "..b:getGroupIndex().." of: "..x5..", "..y5
     local indexa = a:getGroupIndex()
     local indexb = b:getGroupIndex()
+    
+    -- -2 = Cat ,-3 = Mouth, -4 = Food, -5 = Obby, -6 = SpikeFood
     if indexa == -3 or indexb == -3 then
-      if indexa == -4 then
+      if indexa == -4 or indexa == -6 then
         
-        table.insert(destroy_queue, {a:getUserData( ), -4, a:getBody():getUserData()})
-        a:getBody():release() -- works.
+        table.insert(destroy_queue, {a:getUserData( ), indexa, a:getBody():getUserData()})
+        a:getBody():destroy()
+        a:destroy()
+        a:getBody():release()
+        a:release() -- works.
         return "food"
         
         
       end
-      if indexb == -4 then
+      if indexb == -4 or indexb == -6 then
         
-        table.insert(destroy_queue, {b:getUserData( ), -4, b:getBody():getUserData()})
+        table.insert(destroy_queue, {b:getUserData( ), indexb, b:getBody():getUserData()})
+        b:getBody():destroy()
+        b:destroy()
         b:getBody():release()
+        b:release()
         return "food"
   
       end
@@ -61,11 +69,11 @@ collisionmanager.new = function(id)
     if indexa == -3 or indexb == -3 then
       if indexa == -4 then
         a:getBody():release() -- works.
-        love.event.quit()
+        
       end
       if indexb == -4 then
         b:getBody():release()
-        love.event.quit()
+        
       end
   end
 end

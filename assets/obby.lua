@@ -78,6 +78,7 @@ return {
       end 
         self.didtest = true
         love.graphics.setColor(128,128,128,255)
+        
       end,
     
 
