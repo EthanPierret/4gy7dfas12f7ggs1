@@ -10,11 +10,17 @@ return {
     nextshapes = nil,
     didtest = false,
     templist = {},
+    image,
 
 
 
     newbody = function(self, x, y, physics)
       self.body = love.physics.newBody(physics,x, y, "static")
+    end,
+
+    load = function(self, image, scale)
+      self.image = image
+      self.scale = scale
     end,
 
     destroy = function(self)
@@ -23,8 +29,7 @@ return {
     end,
 
 
-
-    newshape = function(self, x, y, physics, scale, list1, list2)
+    newshape = function(self, x, y, physics, scale, list1, list2, customdata)
 
     self.nextshapes = getlistlenth(self.shapes) + 1
     
@@ -47,11 +52,22 @@ return {
     self.shapes[self.nextshapes]["shape"] = love.physics.newPolygonShape(list1)
     self.shapes[self.nextshapes]["fixture"] = love.physics.newFixture(self.body, self.shapes[self.nextshapes]["shape"], 1)
     self.shapes[self.nextshapes]["fixture"]:setUserData("obby")
+    if customdata == nil then
     self.shapes[self.nextshapes]["fixture"]:setGroupIndex(-5)
+    else
+    self.shapes[self.nextshapes]["fixture"]:setSensor(true)
+    self.shapes[self.nextshapes]["fixture"]:setGroupIndex(-7)
+    self.shapes[self.nextshapes]["fixture"]:setUserData(customdata)
+    end
     self.shapes[self.nextshapes]["fixture"]:setCategory(2)
     end,
 
     draw = function(self)
+      love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
+      self.body:getAngle(),self.scale,self.scale,0,0)
+    end,
+
+    debugdraw = function(self)
       
       -- if self.didtest == false then
         love.graphics.setColor(0,0,0,255)
@@ -62,16 +78,17 @@ return {
               self.templist = self.shapes[f]["list"]
                 
               if self.didtest == false then
-          if (v % 2 == 0) then
-            self.templist[v] = self.templist[v] + self.body:getY()
-          --love.graphics.setColor(255,255,255,128)
-          else
-            self.templist[v] = self.templist[v] + self.body:getX()
-          end
-        end
+                if (v % 2 == 0) then
+                self.templist[v] = self.templist[v] + self.body:getY()
+                --love.graphics.setColor(255,255,255,128)
+                else
+                self.templist[v] = self.templist[v] + self.body:getX()
+                end
+              end
           love.graphics.polygon("line", self.templist)
           self.templist = self.shapes[f]["backuplist"]
           self.shapes[f]["list"] = self.shapes[f]["backuplist"]
+          
       --  end
         
         end 

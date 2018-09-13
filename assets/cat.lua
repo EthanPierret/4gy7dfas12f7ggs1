@@ -34,7 +34,7 @@ new = function()
   if type == 1 then 
     self.image = love.graphics.newImage("assets/SpriteSheetBlusie.png")
   elseif type == 2 then 
-    self.image = love.graphics.newImage("assets/SpriteSheetSweetsy.png")
+    self.image = love.graphics.newImage("assets/SpriteSheetPurrey.png")
   elseif type == 3 then 
     self.image = love.graphics.newImage("assets/SpriteSheetNebula.png")
   elseif type == 4 then 
@@ -62,7 +62,7 @@ new = function()
   self.p.shape = love.physics.newCircleShape(self.rad)
   self.p.prop = love.physics.newFixture(self.p.body, self.p.shape, 1)
   
-  self.p.rects = love.physics.newRectangleShape( ((rad-5)/2)*-1,rad*-1,rad-5,rad/2,0 ) --(offsetX,offsetY,Width,Height,Angle)
+  self.p.rects = love.physics.newRectangleShape( ((self.rad-5)/2)*-1,rad*-1/1.5,rad-5,rad,0 ) --(offsetX,offsetY,Width,Height,Angle) ((rad-5)/2)*-1
   self.p.rectp = love.physics.newFixture(self.p.body, self.p.rects, 0)
   
 
@@ -71,6 +71,7 @@ new = function()
 
   self.p.prop:setMask(4) -- don't collide with those Catagories
   self.p.prop:setCategory(2) -- 1 - 16
+  self.p.prop:setRestitution(0.2)
   --self.p.prop:setMask(1) NO! Defulat catagory is 1.
   self.p.prop:setGroupIndex(-2) --  will allways collide with same positive values and never with same negative
   self.p.prop:setUserData(id) -- data storage
@@ -154,10 +155,11 @@ new = function()
       self.rad = self.rad + size
       self.p.inflation[self.inflations+2] = love.physics.newFixture(self.p.body, self.p.inflation[self.inflations+1], 1) 
       self.p.inflation[self.inflations+2]:setMask(4)
+      self.p.inflation[self.inflations+2]:setRestitution(0.2)
       self.p.inflation[self.inflations+2]:setGroupIndex(-2)
       self.p.inflation[self.inflations+2]:setUserData(self.id)
 
-      self.p.rects = love.physics.newRectangleShape( ((self.rad-5)/2)*-1,self.rad*-1,self.rad-5,self.rad/2,0 ) --(offsetX,offsetY,Width,Height,Angle) 
+      self.p.rects = love.physics.newRectangleShape( ((self.rad-5)/2)*-1,self.rad*-1/1.5,self.rad-5,self.rad,0 ) --(offsetX,offsetY,Width,Height,Angle) 
       self.p.rectp = love.physics.newFixture(self.p.body, self.p.rects, 0)
 
       
@@ -181,15 +183,15 @@ new = function()
     end,
     
     draw = function(self) -- Draw
-      
+     
      love.graphics.draw(self.image,self.animation1.quads[self.actframe + (self.emotionmultiplier*7)],(self.p.body:getX()),(self.p.body:getY()),
      self.p.body:getAngle(),self.scalefactor,self.scalefactor,350/2,(350/2)+(self.scalefactor*100),0,0)
       --love.graphics.setColor(0,0,0,255)
       
       --love.graphics.circle("line", self.p.body:getX(), self.p.body:getY(), self.rad)
      
-      --love.graphics.rectangle( "line", self.p.body:getX()-((self.rad-5)/2),(self.rad*-1)+self.p.body:getY(),(self.rad-5),(self.rad/2) )--0,rad*-1,rad-10,rad/2,0 --mode,x,y,width,height
-      --love.graphics.setColor(128,128,128,255)
+      -- Doesnt work --> love.graphics.rectangle( "line", self.p.body:getX()-((self.rad-5)/2),(self.rad*-1)+self.p.body:getY(),(self.rad-5),(self.rad) )--0,rad*-1,rad-10,rad/2,0 --mode,x,y,width,height
+      --love.graphics.setColor(128,128,128,255) -((self.rad-5)/2)
     end 
   }
   end

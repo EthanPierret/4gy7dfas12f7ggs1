@@ -164,11 +164,11 @@ return {
 			    
 		
 				local width, height, fontsize = w, h, f
-
+				love.graphics.setColor(128, 128, 128,255)
 				for h, g in ipairs(self.items) do
 					for i, item in ipairs(self.items[h]) do
 
-
+						
 						if item.videoslist ~= nil and item.videoenabled == true then
 							for i, k in ipairs(item.videoslist) do
 							if item.videoslist[i]:isPlaying() == false then
@@ -194,17 +194,16 @@ return {
 					if item.video:isPlaying() == false then
 					   item.video:rewind()
 					   item.video:play()
-					   
-		
+				
 					end
 
 						
 					--love.graphics.draw(item.video,0,0
 					--,0,0.05,0.05,0,0)
-					love.graphics.setColor(128, 128, 128,255)
+					
 					if item.id == nil then
 					
-					love.graphics.draw(item.video, x + width/2 - ((item.video:getWidth()*self.videoscalefactor)) ,
+					love.graphics.draw(item.video, x + width/2 - ((item.video:getWidth()*self.videoscalefactor)) + self.videooffset["x"],
 					 y + height*(h-1)+((item.video:getHeight()*self.videoscalefactor)/2)+self.videooffset["y"]
 					,0,0.1,0.1,0,0)
 					else
@@ -214,7 +213,7 @@ return {
 						
 						-- ((item.othernames[k]:len()*fontsize/3.9))
 							
-						 - (((item.video:getWidth()*self.videoscalefactor)/2)+self.width/self.colums)
+						 - (((item.video:getWidth()*self.videoscalefactor)/2)+self.width/self.colums) + self.videooffset["x"]
 						,
 						 y + height*(h-1)+((item.video:getHeight()*self.videoscalefactor)/2)+self.videooffset["y"]
 						,0,0.1,0.1,0,0)
@@ -292,7 +291,13 @@ return {
 							item.font = love.graphics.newFont(fontsize)
 							item.nameprintable = love.graphics.newText(item.font,item.name)
 						end
-						love.graphics.print(item.name, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ (fontsize/2)-fontsize/4)
+						
+						if item.offsety then
+							love.graphics.print(item.name, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ ((fontsize/2)-fontsize/4)-((item.offsety-1)*self.fontsize) )
+						else
+							love.graphics.print(item.name, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ (fontsize/2)-fontsize/4)
+						end
+
 					end
 
 					

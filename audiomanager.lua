@@ -13,6 +13,8 @@ return{
             volume = 1,
             pitch = nil,
             sfx=nil,
+            expiresfx=nil,
+            onoff = true,
 
         load = function(self, songid, volume, pitch)
             if songid == 1 then
@@ -20,6 +22,30 @@ return{
                 self.song:setVolume(volume)
                 self.song:setPitch(pitch)
             end
+        end,
+
+        overlapsfx = function(self, sfx, vol)
+            if sfx ~= nil then
+            if self.song then
+                self.song:pause()
+            end
+            self.expiresfx = self.storage["sfx"][sfx]
+            --self.sfx:stop()
+            self.expiresfx:setVolumeLimits(0,vol)
+            self.expiresfx:play()
+            self.onoff = false
+            self.playing = false
+
+            else
+
+            if self.song then
+                self.song:play()
+            end
+            self.expiresfx:pause()
+            self.onoff = true
+            self.playing = true
+            end
+            
         end,
 
         loadlist = function(self, id)
@@ -84,6 +110,9 @@ return{
             self.storage["sfx"]["suck"] = love.audio.newSource("assets/audio/yousuck.wav","stream")
             self.storage["sfx"]["inflate"] = love.audio.newSource("assets/audio/wave.wav","stream")
             self.storage["sfx"]["wave"] = love.audio.newSource("assets/audio/wave.wav","stream")
+            self.storage["sfx"]["music"] = love.audio.newSource("assets/audio/local.mp3","stream")
+            self.storage["sfx"]["elevatoropen"] = love.audio.newSource("assets/audio/elevatoropen.wav","stream")
+            self.storage["sfx"]["elevatorclose"] = love.audio.newSource("assets/audio/elevatorclose.mp3","stream")
             self.storage["sfx"]["butterball"] = {}
             self.storage["sfx"]["cute"] = {}
             self.storage["sfx"]["relaxed"] = {}
@@ -102,9 +131,13 @@ return{
             self.storage["sfx"]["high"][4] = love.audio.newSource("assets/audio/cats/High4.wav","stream")
 
         end,
-        playsfx = function(self,id)
+        playsfx = function(self,id,volume)
+            if volume ~= nil then
+                self.storage["sfx"][id]:setVolumeLimits(0,volume)
+            end
             self.storage["sfx"][id]:play()
         end,
+
         quesfx = function(self,id,type)
             if self.sfx ~= nil then
                 if self.sfx:isPlaying() == false and type == 1 then
@@ -125,14 +158,24 @@ return{
 
         startstop = function(self,play)
             if self.song ~= nil then
+                if self.expiresfx ~= nil then
+                    self.expiresfx:pause()
+                    end
             if play == false and self.song:isPlaying() then
                 self.song:pause()
+                if self.sfx ~= nil then
+                self.sfx:pause()
+                end
+
                 self.playing = false
+                self.onoff = false
             end
 
             if play == true and self.song:isPlaying() == false then
                 self.song:play()
+
                 self.playing = true
+                self.onoff = true
             end
         elseif self.storage[self.id] ~= nil then
             self.song = self.storage[self.id][1]
@@ -165,7 +208,7 @@ return{
         end
         end,
         update = function(self)
-            
+            if self.onoff == true then
             if self.timer > 1 then
                 self.timer = 0
                 if self.song ~= nil then
@@ -187,6 +230,7 @@ return{
             else
             self.timer = self.timer + 0.016
         end
+    end
         end,
 
         setseed = function(self,seed)
@@ -197,6 +241,9 @@ return{
         playlist = function(self,id, pitch)
             local len = #self.storage[id]
             self.id = id
+            if self.expiresfx ~= nil then
+                self.expiresfx:pause()
+            end
             
             local r = math.random(1,len)
             for i, j in ipairs(self.storage[id]) do

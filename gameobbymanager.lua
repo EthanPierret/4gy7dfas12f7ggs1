@@ -10,14 +10,19 @@ return {
             lastmode = 0,
             objects = {},
             nextnum = 1,
-            possiblemapids = {{8,12,14,16,17},{2,3,5,6,7,13,15,18,19},{1,4,9,10,11,20}}, -- enter ids, 1:1 , 21 is not adjusted.
+            -- {1,9,10,14},{2,3,4,5,6,7,12,13,19,20,21} {2,3,4,5,6,7,12,13,19,20,21,26}
+            possiblemapids = {{1,9,10,14,23,23,24,24,25,25,27},{2,3,4,5,6,7,12,13,19,20,21,26},{8,11,15,16,17,17,18,22}}, -- 
+            --               Ins: 25,24,23,17 Outs: 26,20,19,14,13,12,4 Stayout: 27,22,18,16,15,14,11,10,9,8,1 Stayin: 21,7,6,5,3,2
             possiblexitids = {{4,10},{2,3,5,6,7,8},{1,9}},
             seed,
+            mapscale = 0.285,
             eaten = { 0,0 },
             maxheihgt,
             mode = {},
+            mapimages={},
             inflations = 0, -- [1] = Maxheight, [2] = Inflate?
             didgameover = false,
+            debug = true,
             
             
 
@@ -27,6 +32,7 @@ return {
                 if self.lastmode == 0 then
                     self.lastmode = math.random(1,3)
                 end
+
             end,
 
             setseed = function(self,seed)
@@ -38,9 +44,16 @@ return {
              self.catid = id
             end,
 
+            setscale = function(self,x,y,scale)
+                self.scalex = x
+                self.scaley = y
+                self.scalefactor = scale
+            end,
+
             update = function(self,caty)
 
             if self.mode[2] == "c" and self.inflations < 3 then
+                
                 if caty <= -3000 then
                     inflatecat(3)
                     self.inflations = self.inflations + 1
@@ -67,13 +80,18 @@ return {
                     self.lastmode = 1
                 end
                 end
+                
             
                 local ranid = self.possiblemapids[self.lastmode][math.random(1,#self.possiblemapids[self.lastmode])]
-                self.highest = self.highest - (getmapheight(ranid)*0.45)
-                self.objects[self.nextnum]:load(0,self.highest,ranid,0.45,self.nextnum,self.world,r)
+                
+                self.highest = self.highest - (getmapheight(ranid)* self.mapscale)
+                self.objects[self.nextnum]:load(0,self.highest,ranid,self.mapscale,self.nextnum,self.world,r,self.debug)
                 self.eaten[2] = self.eaten[2] + self.objects[self.nextnum].food
+                print(self.lastmode.."    "..ranid)
         
                 self.lastmode = self.objects[self.nextnum].exit
+                print(self.lastmode.."    "..ranid)
+                print(self.objects[self.nextnum].enter)
                 self.nextnum = self.nextnum + 1
                 end
                 elseif self.mode[1] == "c" and caty <= self.highest - 50 and self.didgameover == false then
@@ -83,12 +101,21 @@ return {
             
             for i,j in ipairs(self.objects) do
              
+                if self.scalefactor then
+                
+                if caty <= (self.objects[i].y - (800*(self.scaley/self.scalefactor))) then
+                    self.objects[i]:destroy()
+                    --table.remove( self.objects, i ) -- removing this makes the same thing [2] go on forever. Keeping will not make [3] draw possible, but still collission.
+                
+                end
+            else
                 
                 if caty <= (self.objects[i].y - 800) then
                     self.objects[i]:destroy()
                     --table.remove( self.objects, i ) -- removing this makes the same thing [2] go on forever. Keeping will not make [3] draw possible, but still collission.
                 
                 end
+            end
             end
             
             end,
@@ -99,14 +126,40 @@ return {
 
             end,
 
-            draw = function(self)
+            drawmap = function(self)
+                if self.debug == false then
+                    for d,l in ipairs(self.objects) do
+                        if self.objects[d] ~= nil then
+                        self.objects[d]:drawmap(false)
+                        end
+                    end
+                else
+
                 for d,l in ipairs(self.objects) do
                     if self.objects[d] ~= nil then
-                    self.objects[d]:draw()
+                    self.objects[d]:drawmap(true)
+                    end
+                end
+
+                end
+            end,
+
+            drawfood = function(self)
+                if self.debug == false then
+                    for d,l in ipairs(self.objects) do
+                        if self.objects[d] ~= nil then
+                        self.objects[d]:drawfood(false)
+                        end
+                    end
+                else
+
+                    for d,l in ipairs(self.objects) do
+                        if self.objects[d] ~= nil then
+                        self.objects[d]:drawfood(true)
+                        end
                     end
                 end
             end
-            
 
 
         }

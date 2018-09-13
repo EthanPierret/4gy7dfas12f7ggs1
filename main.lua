@@ -32,6 +32,7 @@ maincat = nil
 local nums
 local curscore = 0
 local inflated = 0
+loadstorage = { maps = {}, light = {}}
 
 
 local holding
@@ -210,8 +211,10 @@ function love.mousepressed(x, y, button, touch)
   
   x = x / scalefactor
   y = y / scalefactor
+
+  x = x - ((540/2)*((scalex/scalefactor)-1))
   --[[
-  x = x - ((540*(scalex-1))/2)---540/2
+  x = x - ((540/2)*((scalex/scalefactor)-1))
   y = y - ((960*(scaley-1))*-1)--+960/2
 
   ]]--
@@ -322,7 +325,7 @@ function love.draw()
   -- totoal screen width ((scalex/scalefactor)*540)
   -- 
   
-
+  
   love.graphics.scale(scalefactor,scalefactor)
   love.graphics.translate( ((540/2)*((scalex/scalefactor)-1)),0 ) --((scalex/scalefactor)*540)-540 love.graphics.getWidth( )
   
@@ -363,22 +366,31 @@ function love.draw()
 end
 
   if lightgameoveractive ~= false and disabledraw ~= true then
-  mainmap:draw()
-  
+  if gameover == false then
+  love.graphics.setColor(128,128,128,255)
+  mainmap:drawfood()
+  maincat:draw(curframe)
+  mainmap:drawmap()
+  else
+    love.graphics.setColor(128,128,128,255)
+    mainmap:drawfood()
+    mainmap:drawmap()
+    maincat:draw(curframe)
+  end
 --[[
   if gameovermultiplier ~= nil then
     love.graphics.setColor(128+gameovermultiplier,128+gameovermultiplier,128+gameovermultiplier,255)
   else
     love.graphics.setColor(128,128,128,255)
   end ]]--
-  maincat:draw(curframe)
+  
 
 end
 
 
  
     if disabledraw == true then
-      print("Is not playing")
+      
       softgameover(maincat, world, 1, gamemusic, gameoverstorage)
 
   -- Update total height
@@ -411,29 +423,40 @@ elseif disabledraw == false then
  
   if gameover == true and gameovermenuactive == true then
   local t, y = getposcam()
-  gameovermenu:draw(((halfw/scalex)+t-menuw/2),halfh+y,menuw,menuh,22)
+  gameovermenu:draw(((halfw/scalex)+t-menuw/2),halfh+y-(#gameovermenu.items*menuh/2),menuw,menuh,22)
   end
   if gameover == true and unlockmenuactive == true then
   local i, o = getposcam()--gameoverstorage["x"]
-  unlockmenu:draw((halfw/scalex)+i-100/2,halfh+o,100,100,22)
+  unlockmenu:draw((halfw/scalex)+i-100/2,halfh+o-(#unlockmenu.items*100/2),100,100,22)
   end
 
+
+
   elseif optionsactive == true then
-    optionmenu:draw((halfw/scalex)-menuw/2,halfh,menuw,menuh,22)
+    optionmenu:draw((halfw/scalex)-menuw/2,halfh-(#optionmenu.items*menuh/2),menuw,menuh,22)
 
 
   elseif musicmenuactive == true then
-    musicmenu:draw((halfw/scalex)-menuw/2,halfh,menuw,menuh,22)
+    musicmenu:draw((halfw/scalex)-menuw/2,halfh-(#musicmenu.items*menuh/2),menuw,menuh,22)
 
   elseif creditsmenuactive == true then
-    creditsmenu:draw((halfw/scalex)-menuw/2,halfh,menuw,menuh,22)
+    creditsmenu:draw((halfw/scalex)-menuw/2,halfh-(#creditsmenu.items*menuh/2),menuw,menuh,22)
 
   elseif catsmenuactive == true then
-    catsmenu:draw(((halfw)-100/2)-(halfw/scalex),halfh,100,100,22)
-    descriptionmenu:draw((halfw/scalex)-100/2,halfh-100,100,100,17)
+    catsmenu:draw(((halfw)-100/2)-(halfw/scalex),halfh-(#catsmenu.items*100/2),100,100,22)
+    descriptionmenu:draw((halfw/scalex)-100/2,halfh-50-(#catsmenu.items*100/2),100,100,17)
   else
-  mainmenu:draw(((halfw/scalex)-menuw/2),halfh,menuw,menuh,22)
+  mainmenu:draw(((halfw/scalex)-menuw/2),halfh-(#mainmenu.items*menuh/2),menuw,menuh,22)
   end
+
+
+  local cur_time = love.timer.getTime()
+   if next_time <= cur_time then
+      next_time = cur_time
+      return
+   end
+   love.timer.sleep(next_time - cur_time)
+   
   
 end
 
@@ -461,7 +484,9 @@ end
 -- Update
 
 function love.update(dt)
+  next_time = next_time + min_dt
   elapsed = elapsed + dt
+  
 
   accum = accum + dt
   while accum >= step do
@@ -469,7 +494,14 @@ function love.update(dt)
   maincat:update()
   end
   gamemusic:update()
-  movecat()
+
+  if love.mouse.isDown(1) then
+  movecat(0)
+  end
+  if love.keyboard.isDown("left") or love.keyboard.isDown("right") then
+    movecat(1)
+  end
+
   accum = accum - step
   if gameoverevent ~= nil then
     gameovermultiplier = gameoverevent:update()
@@ -485,7 +517,14 @@ function love.update(dt)
   end
   
   gamemusic:update()
-  movecat()
+
+  if love.mouse.isDown(1) then
+    movecat(0)
+  end
+  if love.keyboard.isDown("left") or love.keyboard.isDown("right") then
+      movecat(1)
+  end
+
   
   if gameactive == true then
       if randomseed == 0 then
@@ -572,16 +611,31 @@ end
 
 
 
-function movecat()
+function movecat(mode)
   if gameactive == true then
     if gameover == false then
       
-  if (holding == 1) then
+  if (mode == 0) then
+    local x = love.mouse.getX()
+    x = x / scalefactor
+    x = x - ((540/2)*((scalex/scalefactor)-1))
+
+    if x >= gamecats[1].catslist[1].p.body:getX() then
     gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
     gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
-  elseif (holding == 2) then
+    else
     gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
     gamecats[1].catslist[1].p.body:applyAngularImpulse(-2)
+    end
+
+  elseif (mode == 1) then
+    if love.keyboard.isDown("right") then
+    gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
+    gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
+    else
+    gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
+    gamecats[1].catslist[1].p.body:applyAngularImpulse(-2)
+    end
   end
 end
 end
@@ -663,6 +717,7 @@ function loadgame()
   -- mainmap = map.new(0,425,1,world,0.2,2)
   
   mainmap = mapmanager.new()
+  mainmap:setscale(scalex,scaley,scalefactor)
 
   if gamemode == 1 then
   mainmap.mode[1] = "c" -- Limit the generation to a max of around -3000.
@@ -684,11 +739,13 @@ function loadgame()
 
   mainmap:setworld(world)
   maincat = catmanager.new()
+  
   if savedata["unlockedcats"][savedata["cat"]] then
-  maincat:newcat(400,800,25,world,1,savedata["cat"])
+    maincat:newcat(400,800,25,world,1,savedata["cat"])
   else
     maincat:newcat(400,800,25,world,1,1)
   end
+
   gamecats[1] = maincat
   gamecats[1].catslist[1].p.body:applyLinearImpulse(0,-150)
   
@@ -709,24 +766,85 @@ end
 
 
 
+
+
+
+function triggerevent(data)
+
+if data == "Music Start" then
+  gamemusic:overlapsfx("music",(savedata["musicvolume"]/10)/4)
+  --gamemusic:playsfx("elevatoropen",(savedata["musicvolume"]/10)/2)
+elseif data == "Music End" then
+  gamemusic:overlapsfx()
+  gamemusic:playsfx("elevatorclose",(savedata["musicvolume"]/10)/2)
+end
+
+
+end
+
+
+
+
+
+
+
 -- Load
 function love.load()
+  min_dt = 1/60
+   next_time = love.timer.getTime()
     
     scalex = (halfw*2) / 540
     scaley = (halfh*2) / 960
 
     if scalex < scaley then
       scalefactor = scalex
-    elseif scalex > scaley then
+    elseif scalex > scaley then -- scaley*1.5 means resited X scaling
+      scalefactor = scaley -- cloning the vairaible to here means that the height in the scale will be consitant
+    elseif scalex == scaley then
       scalefactor = scaley
     end
+    --print(scalefactor.."x"..scalex.."y"..scaley)
+
 
     if true then
       --love.window.setMode(540, 960, { fullscreen=false,vsync=true, minwidth=400, minheight=300}) --,centered=true
       love.window.setMode(halfw*2,halfh*2,{centered=true,minwidth=30, minheight=40})
       end
 
-   
+
+   --love.graphics.printf("Loading",200,500,50,"left")
+   loadstorage["maps"][1] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][2] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][3] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][4] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][5] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][6] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][7] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][8] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][9] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][10] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][12] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][13] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][14] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][15] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][16] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][17] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][18] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][19] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][20] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][21] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+   loadstorage["maps"][22] = love.graphics.newImage("assets/SpriteSheetButterBall.png")
+
+   loadstorage["light"][1] = love.graphics.newImage("assets/Light1.png")
+   loadstorage["light"][2] = love.graphics.newImage("assets/Light2.png")
+   loadstorage["light"][3] = love.graphics.newImage("assets/Light3.png")
+   loadstorage["light"][4] = love.graphics.newImage("assets/Light4.png")
+   loadstorage["light"][5] = love.graphics.newImage("assets/Light5.png")
+   loadstorage["light"][6] = love.graphics.newImage("assets/Light6-5.png")
+   loadstorage["light"]["white"] = love.graphics.newImage("assets/White.png")
+   loadstorage["light"]["circle"] = love.graphics.newImage("assets/Circle.png")
+   loadstorage["light"]["offwhite"] = love.graphics.newImage("assets/Light-10part.png")
+
     
   
   --love.graphics.scale((halfw*2)/540,(halfh*2)/960)
@@ -868,7 +986,7 @@ end
 
 function beginContact(a, b, coll)
   
-  
+  if gameover == false then
   if begincollision(a,b,coll) == "food" then
   catmode = 1
   curscore = curscore + 25
@@ -881,6 +999,7 @@ function beginContact(a, b, coll)
   maincat:setmode(1)
   mainmap.eaten[1] = mainmap.eaten[1] + 1
   
+  end
   end
   --local x5,y5 = coll:getNormal()
   
@@ -1022,7 +1141,7 @@ function checkforunlock(score)
     savedata["unlockedcats"][7] = 1
   end
 
-  if savedata["story"] == 3 and savedata["unlockedcats"][8] == nil then
+  if savedata["story"] == 3 and gameoverstorage["caty"] <= -10000 and savedata["unlockedcats"][8] == nil then
     table.insert(l, 8)
     savedata["unlockedcats"][8] = 1
   end
@@ -1779,6 +1898,7 @@ function makeunlockmenu(id)
   unlockmenu:setscreenscale(scalex,scaley,scalefactor)
   
   local l = 'You Unlocked: '
+  local indindentions = 1
   for i,k in ipairs(id) do
     local r = id[i]
 
@@ -1786,6 +1906,11 @@ function makeunlockmenu(id)
     l = l..catnames[r]..", "
     else
     l = l..catnames[r]
+    end
+
+    if string.len(l) >= 30 * indindentions then
+      l = l.."\n"
+      indindentions = indindentions + 1
     end
 
     if i == #id then
@@ -1834,6 +1959,7 @@ function makeunlockmenu(id)
           
         table.insert(unlockmenu.items[1][1]["videoslist"], catsvideolist[r])
         unlockmenu.items[1][1]["videoenabled"] = true
+        unlockmenu.items[1][1]["offsety"] = indindentions
         end
         
 

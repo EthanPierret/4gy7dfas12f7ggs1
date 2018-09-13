@@ -16,27 +16,26 @@ require("assets.food"),
 require("assets.leveldata"),
 require("assets.logic"),
 food = 0,
+balnum = 950,
+debug = false,
   
 
 
 
- load = function(self,x, y, idmap,scale, id, world,flip)
+ load = function(self,x, y, idmap,scale, id, world,flip,debug)
   self.physics = world
   local obby = require("assets.obby")
   
   self.obbylist = {
     food = {},
-    obbys = {}
+    obbys = {},
+    specail = {}
 }
 
   if flip == 1 then
     self.flip = 1
   else
     self.flip = -1
-  end
-
-  if self.flip == 1 then
-  --love.event.quit()
   end
 
   self.x = x
@@ -54,18 +53,28 @@ food = 0,
   self.spikeydata = getspikeydata(idmap)
   self.height = (getmapheight(idmap))*self.scale
   self.enter, self.exit = getexitid(idmap)
+  self.specaildata = getspecailblocks(self.idmap)
+  
+    
+  
 
   if self.flip == -1 then
   if self.exit == 1 then
   self.exit = 3
   elseif self.exit == 3 then
-  self.exit = 1
+  self.exit = 1 
   end
   end
+  
             --- Map definition
 
     self.obbylist.obbys[obbyids+1] = obby.new(self.x, self.y, self.physics)
     self.obbylist.obbys[obbyids+1]:newbody(self.x, self.y, self.physics)
+    if debug == false then
+    self.obbylist.obbys[obbyids+1]:load(loadstorage["maps"][id], self.scale)
+    end
+
+
     local foodpos
     local spikeypos
 
@@ -82,7 +91,34 @@ food = 0,
     --end
 
 
-    
+    if self.specaildata ~= false then
+        for i,k in ipairs(self.specaildata) do
+            local x = (self.specaildata[i]["x"] * self.flip)*self.scale
+            local y = self.specaildata[i]["y"] * self.scale
+            local templist = {}
+
+
+            for j,l in ipairs(self.specaildata[i]["polygon"]) do
+                table.insert(templist,(((self.specaildata[i]["polygon"][j]["x"]*self.flip)+self.balnum)*self.scale))
+                table.insert(templist,(self.specaildata[i]["polygon"][j]["y"])*self.scale)
+                
+            end
+            for f,v in ipairs(templist) do
+        
+                if (f % 2 == 0) then
+                templist[f] = templist[f] + y
+                --love.graphics.setColor(255,255,255,128)
+                else
+                templist[f] = templist[f] + x
+                end
+            end
+            print("Making a special Shape at:"..x.."    "..y)
+            self.obbylist.obbys[obbyids+1]:newshape(x,y,self.physics,self.scale,templist,templist,self.specaildata[i]["type"]) -- does not use x or y?
+
+
+        end
+    end
+
     
     
     if foodpos ~= nil then
@@ -91,12 +127,13 @@ food = 0,
         print("Making Real food")
         self.food = self.food+1
         foodpos["x"] = foodpos["x"] * self.flip
-        foodpos["x"] = foodpos["x"] + 600
+        foodpos["x"] = foodpos["x"] + self.balnum
 
         foodpos["x"] = foodpos["x"] * self.scale
         foodpos["y"] = foodpos["y"] * self.scale
         foodpos["x"] = foodpos["x"] + self.x
         foodpos["y"] = foodpos["y"] + self.y
+       
         self.obbylist.food[foodids+1] = food.new(foodpos["x"], foodpos["y"],25,self.physics,foodids+1, self.id, 1) -- fixture(self.id), body(1)
         
         end
@@ -109,7 +146,7 @@ food = 0,
             print("Making Spikey food")
             self.food = self.food+1
             spikeypos["x"] = spikeypos["x"] * self.flip
-            spikeypos["x"] = spikeypos["x"] + 600
+            spikeypos["x"] = spikeypos["x"] + self.balnum
 
             spikeypos["x"] = spikeypos["x"] * self.scale
             spikeypos["y"] = spikeypos["y"] * self.scale
@@ -137,6 +174,8 @@ food = 0,
 
     end
 ]]--
+
+
     for f,v in ipairs(self.mapdata["objects"]) do
         local templisty = { off = {x = nil, y = nil}, data = {}}
         if self.mapdata["objects"][f] ~= nil then
@@ -147,7 +186,7 @@ food = 0,
 
                 for z, k in ipairs(self.mapdata["objects"][f]["polygon"]) do
                 
-                table.insert(templisty["data"], (self.mapdata["objects"][f]["polygon"][z]["x"]*self.flip)+600)
+                table.insert(templisty["data"], (self.mapdata["objects"][f]["polygon"][z]["x"]*self.flip)+ self.balnum)
                 table.insert(templisty["data"], self.mapdata["objects"][f]["polygon"][z]["y"])
                 end
 
@@ -239,24 +278,42 @@ destroy = function(self)
     self = nil
 end,
 
-draw = function(self)
+drawmap = function(self,debug)
 
-for f,v in ipairs(self.obbylist.obbys) do
-    if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
-        self.obbylist.obbys[f]:draw()
+
+    if debug == false then
+        for f,v in ipairs(self.obbylist.obbys) do
+            if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
+            self.obbylist.obbys[f]:draw()
+            end
+        end
+        else
+            for f,v in ipairs(self.obbylist.obbys) do
+                if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
+                    self.obbylist.obbys[f]:debugdraw()
+                end
+              
+            end
     end
-  
-end
 
+end,
 
-for f,v in ipairs(self.obbylist.food) do
-    if self.obbylist.food[f] ~= nil and self.obbylist.food[f] ~= 0 then
-        self.obbylist.food[f]:draw()
-    
+drawfood = function(self,debug)
+    if debug == false then
+        for f,v in ipairs(self.obbylist.food) do
+            if self.obbylist.food[f] ~= nil and self.obbylist.food[f] ~= 0 then
+             self.obbylist.food[f]:draw()
+            
+            end
+        end
+    else
+        for f,v in ipairs(self.obbylist.food) do
+            if self.obbylist.food[f] ~= nil and self.obbylist.food[f] ~= 0 then
+            self.obbylist.food[f]:debugdraw()
+                
+            end
+        end
     end
-  
-end
-
 end
 
 

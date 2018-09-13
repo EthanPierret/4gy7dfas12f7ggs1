@@ -15,10 +15,12 @@ begincollision = function(a,b,coll)
       if indexa == -4 or indexa == -6 then
         
         table.insert(destroy_queue, {a:getUserData( ), indexa, a:getBody():getUserData()})
+
         a:getBody():destroy()
         a:destroy()
         a:getBody():release()
         a:release() -- works.
+
         return "food"
         
         
@@ -26,10 +28,12 @@ begincollision = function(a,b,coll)
       if indexb == -4 or indexb == -6 then
         
         table.insert(destroy_queue, {b:getUserData( ), indexb, b:getBody():getUserData()})
+
         b:getBody():destroy()
         b:destroy()
         b:getBody():release()
         b:release()
+
         return "food"
   
       end
@@ -45,7 +49,18 @@ begincollision = function(a,b,coll)
     -- table.insert(destroy_queue, {b:getUserData( ), -2})
       dogameover(b:getUserData( ))
     end
+  elseif indexa == -7 then
+    triggerevent(a:getUserData())
+    
+    a:destroy()
+    a:release()
+  elseif indexb == -7 then
+    triggerevent(b:getUserData())
+    
+    b:destroy()
+    b:release()
    end
+
 
   end
   return false

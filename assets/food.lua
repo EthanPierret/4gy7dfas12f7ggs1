@@ -62,18 +62,41 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
       
     love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
         self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
-        love.graphics.setColor(0,0,0,255)
-        love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.rad)
-        love.graphics.setColor(128,128,128,255)
-    end
+        --love.graphics.setColor(0,0,0,255)
+        --love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.rad)
+        --love.graphics.setColor(128,128,128,255)
+    
 
-    if self.group == -6 then
+    elseif self.group == -6 then
+
       love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
         self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
+
     end
 
     --end
-    
+  end
+
+  self.debugdraw = function ()
+
+    if self.group == -4 then
+      
+      love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
+          self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
+          love.graphics.setColor(0,0,0,255)
+          love.graphics.circle("line", self.body:getX(), self.body:getY(), self.rad)
+          love.graphics.setColor(128,128,128,255)
+      
+  
+      elseif self.group == -6 then
+
+        love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
+          self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
+          love.graphics.setColor(0,0,0,255)
+          love.graphics.circle("line", self.body:getX(), self.body:getY(), self.rad)
+          love.graphics.setColor(128,128,128,255)
+
+      end
   end
 
 
