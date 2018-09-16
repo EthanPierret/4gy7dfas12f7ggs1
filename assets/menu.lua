@@ -13,6 +13,8 @@ return {
 			animOffset = 0,
 			animOffset2 = 0,
 			loaded = false,
+			drawn = false,
+			count = 0,
 			xoff = 0,
 			yoff = 0,
 			newx,
@@ -38,11 +40,10 @@ return {
 				self.screenw = screenw
 			end,
 			mousepressed = function(self, xl, yl)
-				if self.active == true then
+				if self.active == true and self.loaded == true and self.drawn == true then
 				if (xl ~= nil and yl ~= nil) then
 				local yt = yl
 				local xt = xl
-				
 
 
 				xt = xl + self.xoff --+ (self.xoff*-1)*2
@@ -50,7 +51,10 @@ return {
 
 		
 				
-				if (yt >= self.y and yt <= (self.y+self.height*self.count)) and self.colums ~= 1 then
+				--if (yt >= self.y and yt <= (self.y+self.height*self.count)) and self.colums ~= 1 then
+				if yt >= self.y then
+				if yt <= (self.y+self.height*self.count) then
+				if self.colums ~= 1 then
 					if self.screenconst == nil then
 					self.selected2 = (math.floor(xt/(self.screenw / self.colums))+1)
 					self.selected = math.floor((yt-self.y)/self.height)+1
@@ -82,6 +86,8 @@ return {
 					end
 
 				end
+			end
+		end
 
 
 				if (xt >= self.x and xt <= (self.x+self.width)) and self.colums == 1 then
@@ -150,14 +156,15 @@ return {
 			end,
 			draw = function(self, x, y, w, h, f)
 				if self.active == true then
-				if self.x == nil then
+				--if self.x ~= then
 				self.x = x
 				self.y = y
 				self.width = w
 				self.height = h
 				self.fontsize = f
+				self.drawn = true
 				
-				end
+				--end
 
 				
 

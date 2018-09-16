@@ -29,9 +29,12 @@ lightgameover = function()
     
     end,
 
-    update = function(self)
-        self.timer = self.timer + 0.01875
-        
+    update = function(self,loops)
+        if loops then
+            self.timer = self.timer + 0.01875 * loops
+        else
+            self.timer = self.timer + 0.01875
+        end
     end,
 
     checkplay = function(self)
@@ -53,7 +56,7 @@ lightgameover = function()
         
         --love.graphics.draw(self.video,0,0+caty-(self.video:getHeight()/2),0,1,1)
         
-        
+        print(self.timer)
         love.graphics.draw(loadstorage["light"][1],self.x+self.timer,100+caty-(1280*self.scalefactor),0,self.scalefactor,self.scalefactor)
         love.graphics.draw(loadstorage["light"][2],self.x-self.timer,100+caty-(1280*self.scalefactor),0,self.scalefactor,self.scalefactor) --x,y,rotation,scalex, scaley, orginoffsetx, orginoffy
         love.graphics.draw(loadstorage["light"][3],self.x+(self.timer/2),100+caty-(1280*self.scalefactor),0,self.scalefactor,self.scalefactor)

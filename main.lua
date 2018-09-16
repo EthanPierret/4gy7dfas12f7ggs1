@@ -70,6 +70,9 @@ local unlockmenu
 unlockmenuactive = false
 local descriptionmenu
 
+local mainmenu
+mainmenuactive = false
+
 local lightgameoveractive = nil
 
 local gametimer = 0
@@ -89,6 +92,8 @@ local gameoverstorage = {}
 local nomouse
 local catmode = 0
 local height = 0
+local mousex
+local loops
 
 local gamemode = nil
 
@@ -222,9 +227,9 @@ function love.mousepressed(x, y, button, touch)
 
 
   clostestmouseX = x
-
+  
     if gameactive == true then
-    
+    --[[
     if maincat.catslist[1] ~= nil and gameover == false then
     
     if (x > gamecats[1].catslist[1].p.body:getX()) then
@@ -239,6 +244,7 @@ function love.mousepressed(x, y, button, touch)
       holding = 2
     end
   end
+  ]]--
   debugtext2 = " "..x.."/"..y
 
 
@@ -246,7 +252,6 @@ function love.mousepressed(x, y, button, touch)
     gameovermenu:mousepressed(x,y)
   end
   if gameover == true and unlockmenuactive == true then
-    print("Unlock: Mouse pressed")
     unlockmenu:mousepressed(x,y)
   end 
 
@@ -258,7 +263,7 @@ function love.mousepressed(x, y, button, touch)
     creditsmenu:mousepressed(x,y)
   elseif catsmenuactive == true then
     catsmenu:mousepressed(x,y)
-  else
+  elseif mainmenuactive == true then
     mainmenu:mousepressed(x,y)
   end
   
@@ -303,7 +308,7 @@ function love.keypressed(key)
   elseif catsmenuactive == true then
     catsmenu:keypressed(key)
 
-  else
+  elseif mainmenuactive == true then
     
   mainmenu:keypressed(key)
   end
@@ -487,34 +492,35 @@ function love.update(dt)
   next_time = next_time + min_dt
   elapsed = elapsed + dt
   
-
+  loops = 0
   accum = accum + dt
   while accum >= step do
+  loops = loops + 1
+
   if gameactive == true and gameover == false then
   maincat:update()
   end
+
   gamemusic:update()
 
   if love.mouse.isDown(1) then
   movecat(0)
   end
+
   if love.keyboard.isDown("left") or love.keyboard.isDown("right") then
     movecat(1)
   end
 
+  if gameoverevent ~= nil then
+    
+    --gameovermultiplier = gameoverevent:update()
+    gameoverevent:update()
+  end
+
   accum = accum - step
-  if gameoverevent ~= nil then
-    gameovermultiplier = gameoverevent:update()
+
   end
-  end
-
-
-
-
-  if gameoverevent ~= nil then
-    gameovermultiplier = gameoverevent:update()
-    --print(gameovermultiplier)
-  end
+  
   
   gamemusic:update()
 
@@ -523,6 +529,13 @@ function love.update(dt)
   end
   if love.keyboard.isDown("left") or love.keyboard.isDown("right") then
       movecat(1)
+  end
+
+
+  if gameoverevent ~= nil then
+    --gameovermultiplier = gameoverevent:update()
+    gameoverevent:update(loops)
+    --print(gameovermultiplier)
   end
 
   
@@ -616,11 +629,11 @@ function movecat(mode)
     if gameover == false then
       
   if (mode == 0) then
-    local x = love.mouse.getX()
-    x = x / scalefactor
-    x = x - ((540/2)*((scalex/scalefactor)-1))
+    mousex = love.mouse.getX()
+    mousex = mousex / scalefactor
+    mousex = mousex - ((540/2)*((scalex/scalefactor)-1))
 
-    if x >= gamecats[1].catslist[1].p.body:getX() then
+    if mousex >= gamecats[1].catslist[1].p.body:getX() then
     gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
     gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
     else
@@ -724,11 +737,11 @@ function loadgame()
   if savedata["story"] == 0 then
   mainmap.maxheihgt = -3000
   elseif savedata["story"] == 1 then
-  mainmap.maxheihgt = -5000
+  mainmap.maxheihgt = -500.0
   elseif savedata["story"] == 2 then
-  mainmap.maxheihgt = -7500
+  mainmap.maxheihgt = -750.0
   elseif savedata["story"] == 3 then
-  mainmap.maxheihgt = -10000
+  mainmap.maxheihgt = -1000.0
   end
   end
 
@@ -902,6 +915,7 @@ function love.load()
   gamemusic:loadsfx(1,1) -- 0.5 is 1 octive lower
 
   preload()
+  mainmenuactive = true
   
 
 end
@@ -928,6 +942,7 @@ function preload()
   gameovermenuactive = false
   unlockmenuactive = false
 
+  if mainmenu == nil then
   mainmenu = menu.new()
   mainmenu:setscreen(halfh*2,halfw*2)
   mainmenu:addItem{
@@ -953,6 +968,7 @@ function preload()
         end
       }
   }
+end
 
 	mainmenu:addItem{
     {
@@ -972,8 +988,12 @@ function preload()
     end
   }
   }
-end
+
   mainmenu:load()
+  else
+  mainmenu.active = true
+  mainmenuactive = true
+  end
 
 
 end
