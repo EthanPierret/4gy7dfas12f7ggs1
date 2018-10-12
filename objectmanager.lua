@@ -1,11 +1,5 @@
 
 
-local obby = require("assets.obby")
-require("assets.cat")
-require("assets.food")
-require("assets.leveldata")
-require("assets.logic")
-
 
 
 return {
@@ -51,7 +45,9 @@ debug = false,
   self.mapdata = getmapdata(idmap)
   self.fooddata = getfooddata(idmap)
   self.spikeydata = getspikeydata(idmap)
+  if getmapheight(idmap) ~= nil then
   self.height = (getmapheight(idmap))*self.scale
+  end
   self.enter, self.exit = getexitid(idmap)
   self.specaildata = getspecailblocks(self.idmap)
   
@@ -70,10 +66,30 @@ debug = false,
 
     self.obbylist.obbys[obbyids+1] = obby.new(self.x, self.y, self.physics)
     self.obbylist.obbys[obbyids+1]:newbody(self.x, self.y, self.physics)
-    if debug == false then
-    self.obbylist.obbys[obbyids+1]:load(loadstorage["maps"][id], self.scale)
-    end
+    if idmap ~= nil then
+        
+        if self.idmap < 0 then
+        self.obbylist.obbys[obbyids+1]:load(loadstorage["gamemaps"][idmap], self.scale)
 
+        elseif self.flip == -1 then
+
+            if loadstorage["maps"][idmap*-1] ~= nil then
+            self.obbylist.obbys[obbyids+1]:load(loadstorage["maps"][idmap*-1], self.scale)
+            else
+            self.obbylist.obbys[obbyids+1]:load(loadstorage["maps"][idmap], self.scale)
+            end
+
+        else
+            
+            if loadstorage["maps"][idmap] ~= nil then
+                self.obbylist.obbys[obbyids+1]:load(loadstorage["maps"][idmap], self.scale)
+                else
+                self.obbylist.obbys[obbyids+1]:load(nil, self.scale)
+                end
+        end
+    elseif id == nil then
+        self.obbylist.obbys[obbyids+1]:load(nil, self.scale)
+    end
 
     local foodpos
     local spikeypos
@@ -124,7 +140,7 @@ debug = false,
     if foodpos ~= nil then
         
         if math.random(1,4) ~= 4 then
-        print("Making Real food")
+        
         self.food = self.food+1
         foodpos["x"] = foodpos["x"] * self.flip
         foodpos["x"] = foodpos["x"] + self.balnum
@@ -152,9 +168,9 @@ debug = false,
             spikeypos["y"] = spikeypos["y"] * self.scale
             spikeypos["x"] = spikeypos["x"] + self.x
             spikeypos["y"] = spikeypos["y"] + self.y
-        if self.obbylist.food[foodids+1] == nil then
+            if self.obbylist.food[foodids+1] == nil then
             self.obbylist.food[foodids+1] = 0
-        end
+            end
         self.obbylist.food[foodids+2] = food.new(spikeypos["x"], spikeypos["y"],25, self.physics, foodids+2, self.id, 2) -- fixture(self.id), body(2)
         end
         
@@ -209,24 +225,25 @@ debug = false,
                    -- v[1] = v[1] * scale
             end
 
-    for f,v in ipairs(templist) do
+            for f,v in ipairs(templist) do
         
-        if (f % 2 == 0) then
-        templist[f] = templist[f] + temp2["y"]
-        --love.graphics.setColor(255,255,255,128)
-        else
-        templist[f] = templist[f] + temp2["x"]
-        end
-    end
-    local templist2 = {}
-      for f,v in ipairs(templist) do
+                if (f % 2 == 0) then
+                templist[f] = templist[f] + temp2["y"]
+                --love.graphics.setColor(255,255,255,128)
+                else
+                templist[f] = templist[f] + temp2["x"]
+                end
+            end
+        
+            local templist2 = {}
+            for f,v in ipairs(templist) do
 
-        table.insert(templist2, templist[f])
+            table.insert(templist2, templist[f])
 
-      end
+            end
+        
             
-            
-            self.obbylist.obbys[obbyids+1]:newshape(self.mapdata["objects"][f]["off"]["x"], self.mapdata["objects"][f]["off"]["y"], self.physics, self.scale, templist, templist2)
+        self.obbylist.obbys[obbyids+1]:newshape(self.mapdata["objects"][f]["off"]["x"], self.mapdata["objects"][f]["off"]["y"], self.physics, self.scale, templist, templist2)
     end
 end
 end,
@@ -282,18 +299,30 @@ drawmap = function(self,debug)
 
 
     if debug == false then
+
         for f,v in ipairs(self.obbylist.obbys) do
             if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
             self.obbylist.obbys[f]:draw()
             end
+            
         end
+        
         else
+
+            for f,v in ipairs(self.obbylist.obbys) do
+                if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
+                self.obbylist.obbys[f]:draw()
+                end
+            end
+
             for f,v in ipairs(self.obbylist.obbys) do
                 if self.obbylist.obbys[f] ~= nil and self.obbylist.obbys[f] ~= 0 then
                     self.obbylist.obbys[f]:debugdraw()
                 end
               
             end
+
+            
     end
 
 end,

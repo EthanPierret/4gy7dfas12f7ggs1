@@ -11,16 +11,23 @@ return {
     didtest = false,
     templist = {},
     image,
+    
 
 
 
     newbody = function(self, x, y, physics)
       self.body = love.physics.newBody(physics,x, y, "static")
+      self.x = x
+      self.y = y
+      
     end,
 
     load = function(self, image, scale)
-      self.image = image
       self.scale = scale
+      if image ~= nil then
+      self.image = image
+      end
+      self.transform = love.math.newTransform(self.x-(self.scale*11),self.y-(self.scale*11),0,self.scale*2,self.scale*2)
     end,
 
     destroy = function(self)
@@ -54,6 +61,9 @@ return {
     self.shapes[self.nextshapes]["fixture"]:setUserData("obby")
     if customdata == nil then
     self.shapes[self.nextshapes]["fixture"]:setGroupIndex(-5)
+    elseif customdata == "nokill" then
+      self.shapes[self.nextshapes]["fixture"]:setGroupIndex(-8)
+      self.shapes[self.nextshapes]["fixture"]:setUserData(customdata)
     else
     self.shapes[self.nextshapes]["fixture"]:setSensor(true)
     self.shapes[self.nextshapes]["fixture"]:setGroupIndex(-7)
@@ -63,8 +73,11 @@ return {
     end,
 
     draw = function(self)
-      love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
-      self.body:getAngle(),self.scale,self.scale,0,0)
+    --  love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
+    --  self.body:getAngle(),self.scale,self.scale,0,0)
+    if self.image then
+    love.graphics.draw(self.image,self.transform)
+    end
     end,
 
     debugdraw = function(self)

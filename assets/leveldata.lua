@@ -159,6 +159,7 @@ function getspikeydata(id)
     
   
   end
+  return nil
 end
 
 
@@ -201,7 +202,41 @@ function getspecailblocks(id)
         { x = 0, y = 50},
       },
       width = 300,
-      height = 50}
+      height = 50},
+      {
+        id = "nokill",
+        
+        type = "nokill",
+        shape = "polygon",
+        x = -900,
+        y = 350,
+        width = 0,
+        height = 0,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 0, y = 4050 },
+          { x = -50, y = 4050 },
+          { x = -50, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = "nokill",
+        
+        type = "nokill",
+        shape = "polygon",
+        x = -550,
+        y = 350,
+        width = 0,
+        height = 0,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = -50, y = 0 },
+          { x = -50, y = 3650 },
+          { x = 0, y = 3650 }
+        },
+        properties = {}
+      },
 
     }
   end
@@ -263,6 +298,7 @@ function getmapimage(id)
   elseif id == 22 then
     return love.graphics.newImage("assets/SpriteSheetButterBall.png")
   end
+  return nil
 end
 
 
@@ -519,7 +555,52 @@ function getfooddata(id)
      
       
     }
+  elseif id == 28 then
+    return{
+      {x = 750,
+      y = 1000},
+      {x = -400,
+      y = 450}
+    }
+  elseif id == 29 then
+    return{
+    {x = 500,
+    y = 600},
+    {x = 0,
+    y = 850},
+    {x = -500,
+    y = 600}
+    }
+  elseif id == 30 then
+    return{
+    {x = 600,
+    y = 700},
+    {x = 200,
+    y = 700},
+    {x = 0,
+    y = 500},
+    {x = -200,
+    y = 700},
+    {x = -600,
+    y = 700}
+
+    }
+  elseif id == 31 then
+    return{
+    {x = -700,
+    y = 550},
+    {x = -600,
+    y = 750},
+    {x = -200,
+    y = 750},
+    {x = 200,
+    y = 750},
+    {x = 600,
+    y = 750}
+  
+    }
   end
+  return nil
 end
 
 
@@ -580,12 +661,22 @@ function getexitid(id)
     return 2,3
   elseif id == 27 then
     return 1,3
+  elseif id == 28 then
+    return 3,2
+  elseif id == 29 then
+    return 2,2
+  elseif id == 30 then
+    return 2,2
+  elseif id == 31 then
+    return 2,3
   end
+  return nil
 end
 
 function getmapheight(id)
-
-  if id == 1 then
+  if id < 0 then
+    return 32.5
+  elseif id == 1 then
     return 3450
   elseif id == 2 then
     return 2350
@@ -639,13 +730,371 @@ function getmapheight(id)
     return 2450
   elseif id == 27 then
     return 1500
+  elseif id == 28 then
+    return 2100
+  elseif id == 29 then
+    return 1700
+  elseif id == 30 then
+    return 2200
+  elseif id == 31 then
+    return 2250
   end
-  
+  return nil
 end
 
 
+
+
+
+
+
+
+
+
+
 function getmapdata(id)
-    if id == 1 then
+
+if id == -6 then -- left flip
+  return {
+    objects = {
+      {
+        id = 1843,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -850,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = -100, y = -100 },
+          { x = -100, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1844,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -350,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 1300, y = -150 },
+          { x = 1300, y = 0 }
+        },
+        properties = {}
+      }
+    }
+  }
+elseif id == -5 then -- center flip
+  return {
+    objects = {
+      {
+        id = 1847,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -250,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = -700, y = -150 },
+          { x = -700, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1848,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 250,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 700, y = -150 },
+          { x = 700, y = 0 }
+        },
+        properties = {}
+      }
+    }
+  }
+elseif id == -4 then -- right flip
+  return {
+    objects = {
+      {
+        id = 1845,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 350,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = -1300, y = -150 },
+          { x = -1300, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1846,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 850,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 100, y = -100 },
+          { x = 100, y = 0 }
+        },
+        properties = {}
+      }
+    }
+  }
+elseif id == -3 then -- left
+  return {
+    objects = {
+      {
+        id = 1830,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -850,
+        y = 100,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = -100 },
+          { x = -100, y = -100 },
+          { x = -100, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1831,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -350,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = -150 },
+          { x = 1300, y = -150 },
+          { x = 1300, y = 0 }
+        },
+        properties = {}
+      }
+    }
+}
+elseif id == -2 then -- Center
+  return {
+    objects = {
+      {
+        id = 1828,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -250,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = -150 },
+          { x = -700, y = -150 },
+          { x = -700, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1829,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 250,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = -150 },
+          { x = 700, y = -150 },
+          { x = 700, y = 0 }
+        },
+        properties = {}
+      }
+    }
+}
+elseif id == -1 then -- right
+  return {
+    objects = {
+      {
+        id = 1826,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 350,
+        y = 150,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = -150 },
+          { x = -1300, y = -150 },
+          { x = -1300, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1827,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 850,
+        y = 100,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = -100 },
+          { x = 100, y = -100 },
+          { x = 100, y = 0 }
+        },
+        properties = {}
+      }
+    }
+}
+elseif id == 0 then
+  return {objects = {
+    {
+      id = 1833,
+      name = "",
+      type = "",
+      shape = "polygon",
+      x = -950,
+      y = 3900,
+      width = 0,
+      height = 0,
+      rotation = 0,
+      visible = true,
+      polygon = {
+        { x = 0, y = 0 },
+        { x = 1900, y = 0 },
+        { x = 950, y = 50 }
+      },
+      properties = {}
+    },
+    {
+      id = 1837,
+      name = "",
+      type = "",
+      shape = "polygon",
+      x = -950,
+      y = 0,
+      width = 0,
+      height = 0,
+      rotation = 0,
+      visible = true,
+      polygon = {
+        { x = 0, y = 0 },
+        { x = 0, y = 2100 },
+        { x = -50, y = 2100 }
+      },
+      properties = {}
+    },
+    {
+      id = 1838,
+      name = "",
+      type = "",
+      shape = "polygon",
+      x = 950,
+      y = 0,
+      width = 0,
+      height = 0,
+      rotation = 0,
+      visible = true,
+      polygon = {
+        { x = 0, y = 0 },
+        { x = 50, y = 2100 },
+        { x = 0, y = 2100 }
+      },
+      properties = {}
+    },
+    {
+      id = 1839,
+      name = "",
+      type = "",
+      shape = "polygon",
+      x = -1000,
+      y = 2100,
+      width = 0,
+      height = 0,
+      rotation = 0,
+      visible = true,
+      polygon = {
+        { x = 0, y = 0 },
+        { x = 50, y = 1800 },
+        { x = 50, y = 0 }
+      },
+      properties = {}
+    },
+    {
+      id = 1840,
+      name = "",
+      type = "",
+      shape = "polygon",
+      x = 950,
+      y = 2100,
+      width = 0,
+      height = 0,
+      rotation = 0,
+      visible = true,
+      polygon = {
+        { x = 0, y = 0 },
+        { x = 50, y = 0 },
+        { x = 0, y = 1800 }
+      },
+      properties = {}
+    }
+  }
+}
+elseif id == 1 then
 return {
   
     type = "objectgroup",
@@ -1894,19 +2343,19 @@ n
         },
         {
           id = 958,
-         
-         
+          name = "",
+          type = "",
           shape = "polygon",
           x = -250,
-          y = 900,
-          
-          
-          
-          
+          y = 850,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
           polygon = {
             { x = 0, y = 0 },
-            { x = -100, y = 550 },
-            { x = 0, y = 500 }
+            { x = -100, y = 600 },
+            { x = 0, y = 550 }
           },
           properties = {}
         },
@@ -4381,15 +4830,15 @@ elseif id == 9 then
     objects = {
       {
         id = 1096,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 350,
         y = 0,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -250, y = 250 },
@@ -4399,15 +4848,15 @@ elseif id == 9 then
       },
       {
         id = 1097,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = -50,
         y = 150,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -400, y = 250 },
@@ -4417,15 +4866,15 @@ elseif id == 9 then
       },
       {
         id = 1098,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = -450,
         y = 400,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -250, y = 300 },
@@ -4435,15 +4884,15 @@ elseif id == 9 then
       },
       {
         id = 1100,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = -700,
         y = 700,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = 250, y = 300 },
@@ -4453,15 +4902,15 @@ elseif id == 9 then
       },
       {
         id = 1101,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = -450,
         y = 1000,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = 400, y = 250 },
@@ -4471,15 +4920,15 @@ elseif id == 9 then
       },
       {
         id = 1102,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 100,
         y = 1150,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = 250, y = 250 },
@@ -4489,15 +4938,15 @@ elseif id == 9 then
       },
       {
         id = 1103,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 150,
         y = 600,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -150, y = 100 },
@@ -4507,15 +4956,15 @@ elseif id == 9 then
       },
       {
         id = 1104,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 150,
         y = 600,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = 400, y = 50 },
@@ -4525,15 +4974,15 @@ elseif id == 9 then
       },
       {
         id = 1105,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 150,
         y = 700,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = 400, y = 50 },
@@ -4542,34 +4991,16 @@ elseif id == 9 then
         properties = {}
       },
       {
-        id = 1106,
-       
-       
-        shape = "polygon",
-        x = 800,
-        y = 500,
-        
-        
-        
-        
-        polygon = {
-          { x = 0, y = 0 },
-          { x = -350, y = 200 },
-          { x = 0, y = 400 }
-        },
-        properties = {}
-      },
-      {
         id = 1108,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 900,
         y = 150,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -100, y = 350 },
@@ -4579,15 +5010,15 @@ elseif id == 9 then
       },
       {
         id = 1109,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 800,
         y = 900,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = 100, y = 350 },
@@ -4597,15 +5028,15 @@ elseif id == 9 then
       },
       {
         id = 1110,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 900,
         y = 1250,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -50, y = 150 },
@@ -4615,19 +5046,55 @@ elseif id == 9 then
       },
       {
         id = 1112,
-       
-       
+        name = "",
+        type = "",
         shape = "polygon",
         x = 900,
         y = 150,
-        
-        
-        
-        
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
         polygon = {
           { x = 0, y = 0 },
           { x = -50, y = -150 },
           { x = 50, y = -150 }
+        },
+        properties = {}
+      },
+      {
+        id = 1821,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 550,
+        y = 650,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 250, y = -150 },
+          { x = 250, y = 0 }
+        },
+        properties = {}
+      },
+      {
+        id = 1822,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 550,
+        y = 750,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 250, y = 150 },
+          { x = 250, y = 0 }
         },
         properties = {}
       }
@@ -7158,10 +7625,11 @@ elseif id == 19 then
         },
         properties = {}
       },
+      --[[
       {
         id = 1243,
         name = "",
-        type = "",
+        type = "nokill",
         shape = "polygon",
         x = -900,
         y = 350,
@@ -7180,7 +7648,7 @@ elseif id == 19 then
       {
         id = 1244,
         name = "",
-        type = "",
+        type = "nokill",
         shape = "polygon",
         x = -550,
         y = 350,
@@ -7195,7 +7663,7 @@ elseif id == 19 then
           { x = 0, y = 3650 }
         },
         properties = {}
-      },
+      }, ]]--
       {
         id = 1245,
         name = "",
@@ -7514,15 +7982,15 @@ elseif id == 19 then
         type = "",
         shape = "polygon",
         x = 950,
-        y = 3050,
+        y = 3000,
         width = 0,
         height = 0,
         rotation = 0,
         visible = true,
         polygon = {
           { x = 0, y = 0 },
-          { x = -100, y = 250 },
-          { x = 0, y = 1150 }
+          { x = -150, y = 400 },
+          { x = 0, y = 1200 }
         },
         properties = {}
       },
@@ -7719,12 +8187,11 @@ elseif id == 19 then
         visible = true,
         polygon = {
           { x = 0, y = 0 },
-          { x = 0, y = 1250 },
-          { x = 50, y = 600 }
+          { x = 0, y = 1200 },
+          { x = 50, y = 576 }
         },
         properties = {}
       }
-    
     }
   }
 --[[
@@ -7885,8 +8352,8 @@ elseif id == 20 then
         visible = true,
         polygon = {
           { x = 0, y = 0 },
-          { x = 200, y = 300 },
-          { x = 0, y = 300 }
+          { x = 200, y = 250 },
+          { x = 0, y = 250 }
         },
         properties = {}
       },
@@ -7896,14 +8363,14 @@ elseif id == 20 then
         type = "",
         shape = "polygon",
         x = -500,
-        y = 2300,
+        y = 2250,
         width = 0,
         height = 0,
         rotation = 0,
         visible = true,
         polygon = {
           { x = 0, y = 0 },
-          { x = 0, y = 150 },
+          { x = 0, y = 200 },
           { x = 50, y = 0 }
         },
         properties = {}
@@ -8029,8 +8496,8 @@ elseif id == 20 then
         visible = true,
         polygon = {
           { x = 0, y = 0 },
-          { x = -200, y = 300 },
-          { x = 0, y = 300 }
+          { x = -200, y = 250 },
+          { x = 0, y = 250 }
         },
         properties = {}
       },
@@ -8040,14 +8507,14 @@ elseif id == 20 then
         type = "",
         shape = "polygon",
         x = 450,
-        y = 2300,
+        y = 2250,
         width = 0,
         height = 0,
         rotation = 0,
         visible = true,
         polygon = {
           { x = 0, y = 0 },
-          { x = 50, y = 150 },
+          { x = 50, y = 200 },
           { x = 50, y = 0 }
         },
         properties = {}
@@ -8103,42 +8570,6 @@ elseif id == 20 then
           { x = 0, y = 0 },
           { x = 200, y = 200 },
           { x = 0, y = 200 }
-        },
-        properties = {}
-      },
-      {
-        id = 1294,
-        name = "",
-        type = "",
-        shape = "polygon",
-        x = 0,
-        y = 1950,
-        width = 0,
-        height = 0,
-        rotation = 0,
-        visible = true,
-        polygon = {
-          { x = 0, y = 0 },
-          { x = -200, y = 50 },
-          { x = -400, y = -300 }
-        },
-        properties = {}
-      },
-      {
-        id = 1295,
-        name = "",
-        type = "",
-        shape = "polygon",
-        x = 0,
-        y = 1950,
-        width = 0,
-        height = 0,
-        rotation = 0,
-        visible = true,
-        polygon = {
-          { x = 0, y = 0 },
-          { x = 200, y = 50 },
-          { x = 400, y = -300 }
         },
         properties = {}
       },
@@ -8791,6 +9222,42 @@ elseif id == 20 then
           { x = 0, y = 100 }
         },
         properties = {}
+      },
+      {
+        id = 1818,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = -400,
+        y = 1650,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = 400, y = 300 },
+          { x = 200, y = 350 }
+        },
+        properties = {}
+      },
+      {
+        id = 1820,
+        name = "",
+        type = "",
+        shape = "polygon",
+        x = 400,
+        y = 1650,
+        width = 0,
+        height = 0,
+        rotation = 0,
+        visible = true,
+        polygon = {
+          { x = 0, y = 0 },
+          { x = -400, y = 300 },
+          { x = -200, y = 350 }
+        },
+        properties = {}
       }
     }
   }
@@ -8815,15 +9282,15 @@ elseif id == 21 then
         objects = {
           {
             id = 1405,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -250,
             y = 0,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 550 },
@@ -8833,15 +9300,15 @@ elseif id == 21 then
           },
           {
             id = 1406,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 250,
             y = 0,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 300 },
@@ -8851,15 +9318,15 @@ elseif id == 21 then
           },
           {
             id = 1407,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 350,
             y = 100,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 200 },
@@ -8869,15 +9336,15 @@ elseif id == 21 then
           },
           {
             id = 1408,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 450,
             y = 50,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 50 },
@@ -8887,15 +9354,15 @@ elseif id == 21 then
           },
           {
             id = 1409,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 500,
             y = 0,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 50 },
@@ -8905,15 +9372,15 @@ elseif id == 21 then
           },
           {
             id = 1410,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 600,
             y = 0,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 50 },
@@ -8923,15 +9390,15 @@ elseif id == 21 then
           },
           {
             id = 1411,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 700,
             y = 50,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 50, y = 50 },
@@ -8941,15 +9408,15 @@ elseif id == 21 then
           },
           {
             id = 1412,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 750,
             y = 100,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 200 },
@@ -8959,15 +9426,15 @@ elseif id == 21 then
           },
           {
             id = 1413,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 850,
             y = 300,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 150 },
@@ -8977,15 +9444,15 @@ elseif id == 21 then
           },
           {
             id = 1414,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 950,
             y = 450,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -100, y = 200 },
@@ -8995,15 +9462,15 @@ elseif id == 21 then
           },
           {
             id = 1415,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 850,
             y = 650,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -150, y = 100 },
@@ -9013,15 +9480,15 @@ elseif id == 21 then
           },
           {
             id = 1416,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 700,
             y = 750,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -900, y = 350 },
@@ -9031,15 +9498,15 @@ elseif id == 21 then
           },
           {
             id = 1417,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 1100,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 400 },
@@ -9049,15 +9516,15 @@ elseif id == 21 then
           },
           {
             id = 1418,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 1500,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 950, y = 250 },
@@ -9067,15 +9534,15 @@ elseif id == 21 then
           },
           {
             id = 1419,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 750,
             y = 1750,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 150 },
@@ -9085,15 +9552,15 @@ elseif id == 21 then
           },
           {
             id = 1420,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 850,
             y = 1900,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 500 },
@@ -9103,15 +9570,15 @@ elseif id == 21 then
           },
           {
             id = 1421,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 950,
             y = 2400,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = 550 },
@@ -9121,15 +9588,15 @@ elseif id == 21 then
           },
           {
             id = 1422,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 900,
             y = 2950,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = 350 },
@@ -9139,15 +9606,15 @@ elseif id == 21 then
           },
           {
             id = 1423,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 850,
             y = 3300,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -200, y = 250 },
@@ -9157,15 +9624,15 @@ elseif id == 21 then
           },
           {
             id = 1424,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 400,
             y = 3550,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 500, y = 150 },
@@ -9175,15 +9642,15 @@ elseif id == 21 then
           },
           {
             id = 1425,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 900,
             y = 3700,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -350, y = 500 },
@@ -9193,15 +9660,15 @@ elseif id == 21 then
           },
           {
             id = 1426,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 550,
             y = 4150,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 50 },
               { x = -300, y = 400 },
@@ -9211,15 +9678,15 @@ elseif id == 21 then
           },
           {
             id = 1427,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -350,
             y = 4300,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 50 },
               { x = 100, y = 250 },
@@ -9229,15 +9696,15 @@ elseif id == 21 then
           },
           {
             id = 1428,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -350,
             y = 4300,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 50 },
               { x = -550, y = -350 },
@@ -9247,15 +9714,15 @@ elseif id == 21 then
           },
           {
             id = 1429,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -900,
             y = 3950,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 50, y = -500 },
@@ -9265,15 +9732,15 @@ elseif id == 21 then
           },
           {
             id = 1430,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -850,
             y = 3450,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = -400 },
@@ -9283,15 +9750,15 @@ elseif id == 21 then
           },
           {
             id = 1431,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -900,
             y = 3050,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 450, y = -300 },
@@ -9301,15 +9768,15 @@ elseif id == 21 then
           },
           {
             id = 1432,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -900,
             y = 2600,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = -250 },
@@ -9319,15 +9786,15 @@ elseif id == 21 then
           },
           {
             id = 1433,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -950,
             y = 2350,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = -1250 },
@@ -9337,15 +9804,15 @@ elseif id == 21 then
           },
           {
             id = 1434,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -950,
             y = 1100,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 300, y = -400 },
@@ -9355,15 +9822,15 @@ elseif id == 21 then
           },
           {
             id = 1435,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -650,
             y = 700,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 400, y = -150 },
@@ -9373,15 +9840,15 @@ elseif id == 21 then
           },
           {
             id = 1436,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 250,
             y = 300,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 100 },
@@ -9391,15 +9858,15 @@ elseif id == 21 then
           },
           {
             id = 1437,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -550,
             y = 1850,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = 100 },
@@ -9409,15 +9876,15 @@ elseif id == 21 then
           },
           {
             id = 1438,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 1850,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 550, y = 150 },
@@ -9427,15 +9894,15 @@ elseif id == 21 then
           },
           {
             id = 1439,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 350,
             y = 2000,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 100 },
@@ -9445,15 +9912,15 @@ elseif id == 21 then
           },
           {
             id = 1440,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 2100,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 650, y = 150 },
@@ -9463,15 +9930,15 @@ elseif id == 21 then
           },
           {
             id = 1441,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 450,
             y = 2100,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 150, y = 600 },
@@ -9481,33 +9948,33 @@ elseif id == 21 then
           },
           {
             id = 1442,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 450,
-            y = 2450,
-            
-            
-            
-            
+            y = 2400,
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
-              { x = -50, y = 250 },
-              { x = 0, y = 250 }
+              { x = -50, y = 300 },
+              { x = 0, y = 300 }
             },
             properties = {}
           },
           {
             id = 1443,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 400,
             y = 2700,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 150 },
@@ -9517,15 +9984,15 @@ elseif id == 21 then
           },
           {
             id = 1444,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -550,
             y = 2400,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 350, y = 50 },
@@ -9535,15 +10002,15 @@ elseif id == 21 then
           },
           {
             id = 1445,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 2450,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 300, y = 50 },
@@ -9553,15 +10020,15 @@ elseif id == 21 then
           },
           {
             id = 1446,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 2500,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 300, y = 550 },
@@ -9571,15 +10038,15 @@ elseif id == 21 then
           },
           {
             id = 1448,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -450,
             y = 3250,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = 50 },
@@ -9589,15 +10056,15 @@ elseif id == 21 then
           },
           {
             id = 1449,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -450,
             y = 3450,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -50, y = 150 },
@@ -9607,15 +10074,15 @@ elseif id == 21 then
           },
           {
             id = 1450,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -450,
             y = 3450,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 250, y = 150 },
@@ -9625,15 +10092,15 @@ elseif id == 21 then
           },
           {
             id = 1451,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 100,
             y = 3750,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -300, y = 200 },
@@ -9643,15 +10110,15 @@ elseif id == 21 then
           },
           {
             id = 1452,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 100,
             y = 3750,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 300, y = 100 },
@@ -9661,15 +10128,15 @@ elseif id == 21 then
           },
           {
             id = 1453,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 3950,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 200, y = 250 },
@@ -9679,15 +10146,15 @@ elseif id == 21 then
           },
           {
             id = 1454,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 0,
             y = 4200,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 50, y = 0 },
@@ -9697,15 +10164,15 @@ elseif id == 21 then
           },
           {
             id = 1455,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 50,
             y = 3950,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 250 },
@@ -9715,15 +10182,15 @@ elseif id == 21 then
           },
           {
             id = 1456,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -550,
             y = 1150,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -100, y = 250 },
@@ -9733,15 +10200,15 @@ elseif id == 21 then
           },
           {
             id = 1457,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -650,
             y = 1400,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 100, y = 50 },
@@ -9751,15 +10218,15 @@ elseif id == 21 then
           },
           {
             id = 1458,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = -200,
             y = 2000,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 100 },
@@ -9769,15 +10236,15 @@ elseif id == 21 then
           },
           {
             id = 1539,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 100,
             y = 3050,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -200, y = 200 },
@@ -9787,15 +10254,15 @@ elseif id == 21 then
           },
           {
             id = 1540,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 50,
             y = 3300,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 50, y = 100 },
@@ -9805,15 +10272,15 @@ elseif id == 21 then
           },
           {
             id = 1541,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 50,
             y = 3400,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = -150, y = -150 },
@@ -9823,15 +10290,15 @@ elseif id == 21 then
           },
           {
             id = 1542,
-            
-            
+            name = "",
+            type = "",
             shape = "polygon",
             x = 100,
             y = 3250,
-            
-            
-            
-            
+            width = 0,
+            height = 0,
+            rotation = 0,
+            visible = true,
             polygon = {
               { x = 0, y = 0 },
               { x = 0, y = 150 },
@@ -10078,6 +10545,7 @@ n
           offsety = 0,
           draworder = "topdown",
           properties = {},
+          
           objects = {
             {
               id = 1562,
@@ -10308,8 +10776,8 @@ n
               visible = true,
               polygon = {
                 { x = 0, y = 0 },
-                { x = 150, y = 50 },
-                { x = 150, y = 0 }
+                { x = 200, y = 50 },
+                { x = 200, y = 0 }
               },
               properties = {}
             },
@@ -10318,7 +10786,7 @@ n
               name = "",
               type = "",
               shape = "polygon",
-              x = 450,
+              x = 500,
               y = 300,
               width = 0,
               height = 0,
@@ -10326,8 +10794,8 @@ n
               visible = true,
               polygon = {
                 { x = 0, y = 0 },
-                { x = 350, y = 100 },
-                { x = 350, y = 0 }
+                { x = 300, y = 100 },
+                { x = 300, y = 0 }
               },
               properties = {}
             },
@@ -10440,8 +10908,7 @@ n
               properties = {}
             }
           }
-        
-      }
+        }
 --[[
 n
 n
@@ -11389,8 +11856,8 @@ n
             visible = true,
             polygon = {
               { x = 0, y = 0 },
-              { x = -350, y = 650 },
-              { x = 350, y = 650 }
+              { x = -300, y = 650 },
+              { x = 300, y = 650 }
             },
             properties = {}
           },
@@ -11407,8 +11874,8 @@ n
             visible = true,
             polygon = {
               { x = 0, y = 0 },
-              { x = -350, y = -650 },
-              { x = 350, y = -650 }
+              { x = -300, y = -650 },
+              { x = 300, y = -650 }
             },
             properties = {}
           }
@@ -11570,5 +12037,1790 @@ n
           }
         }
       }
+--[[
+n
+n
+n
+n
+n
+]]--
+    elseif id == 28 then
+      return {objects = {
+        {
+          id = 1698,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 0,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 100 },
+            { x = 150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1699,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 400,
+          y = 100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 150 },
+            { x = 100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1700,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 500,
+          y = 250,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 300, y = 100 },
+            { x = 300, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1701,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 800,
+          y = 350,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 400 },
+            { x = 150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1702,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 950,
+          y = 750,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 0, y = 150 },
+            { x = 50, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1703,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 950,
+          y = 900,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1704,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 900,
+          y = 1050,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 350 },
+            { x = 50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1705,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 950,
+          y = 1400,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -150, y = 300 },
+            { x = 0, y = 300 }
+          },
+          properties = {}
+        },
+        {
+          id = 1706,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 800,
+          y = 1700,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -1050, y = 250 },
+            { x = 0, y = 250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1707,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 1400,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = -50 },
+            { x = 100, y = -250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1708,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 350,
+          y = 1150,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -100, y = -200 },
+            { x = 0, y = -200 }
+          },
+          properties = {}
+        },
+        {
+          id = 1709,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 950,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = -100 },
+            { x = 150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1710,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 400,
+          y = 850,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = -150 },
+            { x = 100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1711,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 500,
+          y = 700,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1712,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 550,
+          y = 850,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 100 },
+            { x = -50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1713,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 500,
+          y = 950,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -150, y = 400 },
+            { x = -150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1714,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -250,
+          y = 0,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -150, y = 100 },
+            { x = -150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1715,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -400,
+          y = 100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -100, y = 150 },
+            { x = -100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1716,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -500,
+          y = 250,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 200 },
+            { x = -50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1717,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -550,
+          y = 450,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 0, y = 50 },
+            { x = -50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1718,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -550,
+          y = 500,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 200 },
+            { x = 0, y = 200 }
+          },
+          properties = {}
+        },
+        {
+          id = 1719,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -500,
+          y = 700,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1720,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -400,
+          y = 850,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 100 },
+            { x = 0, y = 100 }
+          },
+          properties = {}
+        },
+        {
+          id = 1721,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -300,
+          y = 950,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 0 },
+            { x = 0, y = 200 }
+          },
+          properties = {}
+        },
+        {
+          id = 1722,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -300,
+          y = 1150,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 350 },
+            { x = 0, y = 350 }
+          },
+          properties = {}
+        },
+        {
+          id = 1723,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -250,
+          y = 1500,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -450, y = 100 },
+            { x = -450, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1724,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -700,
+          y = 1600,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -250, y = 250 },
+            { x = -250, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1725,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -950,
+          y = 1850,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 250 },
+            { x = 0, y = 250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1726,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -250,
+          y = 1950,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -100, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        }
+      }
+    }
+
+
+
+
+
+    elseif id == 29 then
+      return {objects = {
+        {
+          id = 1727,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -250,
+          y = 0,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -150, y = 50 },
+            { x = -150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1728,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -400,
+          y = 50,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 400 },
+            { x = -300, y = 250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1729,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -700,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -100, y = 150 },
+            { x = -100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1730,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -800,
+          y = 450,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 150 },
+            { x = -50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1731,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 600,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 350, y = 250 },
+            { x = 0, y = 500 }
+          },
+          properties = {}
+        },
+        {
+          id = 1732,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 1100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1733,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -800,
+          y = 1250,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1734,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -700,
+          y = 1400,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 400, y = -150 },
+            { x = 300, y = 250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1735,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -400,
+          y = 1650,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 50 },
+            { x = 0, y = 50 }
+          },
+          properties = {}
+        },
+        {
+          id = 1736,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 1700,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = -50 },
+            { x = 150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1737,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 400,
+          y = 1650,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -100, y = -400 },
+            { x = 300, y = -250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1738,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 700,
+          y = 1400,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = -150 },
+            { x = 100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1739,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 800,
+          y = 1250,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = -150 },
+            { x = 50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1740,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 850,
+          y = 1100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -350, y = -250 },
+            { x = 0, y = -500 }
+          },
+          properties = {}
+        },
+        {
+          id = 1741,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 850,
+          y = 600,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = -150 },
+            { x = 0, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1742,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 800,
+          y = 450,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -100, y = -150 },
+            { x = 0, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1743,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 700,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -400, y = 150 },
+            { x = -300, y = -250 }
+          },
+          properties = {}
+        },
+        {
+          id = 1744,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 400,
+          y = 50,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -150, y = -50 },
+            { x = 0, y = -50 }
+          },
+          properties = {}
+        }
+      }
+    }
+
+
+
+
+
+
+
+    elseif id == 30 then
+      return {objects = {
+        {
+          id = 1749,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -250,
+          y = 0,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -400, y = 100 },
+            { x = -400, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1750,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 200, y = -200 },
+            { x = 0, y = -200 }
+          },
+          properties = {}
+        },
+        {
+          id = 1751,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 450 },
+            { x = -50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1752,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -900,
+          y = 750,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 0, y = 300 },
+            { x = -50, y = 300 }
+          },
+          properties = {}
+        },
+        {
+          id = 1753,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -950,
+          y = 900,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1754,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -550,
+          y = 500,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1755,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 500,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1756,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -150,
+          y = 900,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1757,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 1300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1758,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -550,
+          y = 1300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1759,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -150,
+          y = 1700,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1760,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 650,
+          y = 900,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 300, y = 0 },
+            { x = 150, y = -150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1761,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -900,
+          y = 1050,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 500 },
+            { x = 0, y = 500 }
+          },
+          properties = {}
+        },
+        {
+          id = 1762,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 1550,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 350 },
+            { x = 0, y = 350 }
+          },
+          properties = {}
+        },
+        {
+          id = 1763,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -750,
+          y = 1900,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1764,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -600,
+          y = 2050,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 350, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1765,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 2200,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 350, y = -150 },
+            { x = 350, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1766,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 600,
+          y = 2050,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = -150 },
+            { x = 150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1767,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 750,
+          y = 1900,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = -350 },
+            { x = 100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1768,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 850,
+          y = 1550,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = -500 },
+            { x = 50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1769,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 900,
+          y = 1050,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 0, y = -300 },
+            { x = 50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1770,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 900,
+          y = 750,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = -450 },
+            { x = 0, y = -450 }
+          },
+          properties = {}
+        },
+        {
+          id = 1771,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 850,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -200, y = -200 },
+            { x = 0, y = -200 }
+          },
+          properties = {}
+        },
+        {
+          id = 1772,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 650,
+          y = 100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -400, y = -100 },
+            { x = 0, y = -100 }
+          },
+          properties = {}
+        }
+      }
+    }
+
+
+
+
+
+
+    elseif id == 31 then
+      return {objects = {
+        {
+          id = 1780,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 0,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 100 },
+            { x = 0, y = 100 }
+          },
+          properties = {}
+        },
+        {
+          id = 1781,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = 700 },
+            { x = -50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1782,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -900,
+          y = 800,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 0, y = 300 },
+            { x = -50, y = 300 }
+          },
+          properties = {}
+        },
+        {
+          id = 1783,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -900,
+          y = 1100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = 500 },
+            { x = 0, y = 500 }
+          },
+          properties = {}
+        },
+        {
+          id = 1784,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -850,
+          y = 1600,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = 350 },
+            { x = 0, y = 350 }
+          },
+          properties = {}
+        },
+        {
+          id = 1785,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -750,
+          y = 1950,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1786,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -600,
+          y = 2100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 350, y = 150 },
+            { x = 0, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1787,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 250,
+          y = 2250,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 350, y = -150 },
+            { x = 350, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1788,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 600,
+          y = 2100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = -150 },
+            { x = 150, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1789,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 750,
+          y = 1950,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 100, y = -350 },
+            { x = 100, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1790,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 850,
+          y = 1600,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 50, y = -500 },
+            { x = 50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1791,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 900,
+          y = 1100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 0, y = -300 },
+            { x = 50, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 1792,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 900,
+          y = 800,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -50, y = -450 },
+            { x = 0, y = -450 }
+          },
+          properties = {}
+        },
+        {
+          id = 1793,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 850,
+          y = 350,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -200, y = -200 },
+            { x = 0, y = -200 }
+          },
+          properties = {}
+        },
+        {
+          id = 1794,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 650,
+          y = 150,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -350, y = -100 },
+            { x = 0, y = -100 }
+          },
+          properties = {}
+        },
+        {
+          id = 1795,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 300,
+          y = 50,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = -550, y = 0 },
+            { x = -550, y = -50 }
+          },
+          properties = {}
+        },
+        {
+          id = 1796,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -800,
+          y = 800,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1797,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -400,
+          y = 400,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1798,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 400,
+          y = 400,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1799,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 0,
+          y = 800,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1800,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -400,
+          y = 1200,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1801,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 400,
+          y = 1200,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1802,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 800,
+          y = 800,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1803,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 0,
+          y = 1600,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 150, y = 150 },
+            { x = 0, y = 300 },
+            { x = -150, y = 150 }
+          },
+          properties = {}
+        },
+        {
+          id = 1811,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = -283.333,
+          y = 50,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 33.3333, y = 0 },
+            { x = -66.6667, y = -50 },
+            { x = 33.3333, y = -50 }
+          },
+          properties = {}
+        }
+      }
+    }
 end
 end

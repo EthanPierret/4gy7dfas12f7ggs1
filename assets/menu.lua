@@ -25,8 +25,11 @@ return {
 			skewed = false,
 			screenh = nil,
 			screenw = nil,
+			autofit = true,
+			autofitmulti = true,
 			videoscalefactor = 0.05,
 			videooffset = {x = 0, y = 10},
+
 			load = function(self)
 				self.count = 0
 						for _ in pairs(self.items) do
@@ -35,10 +38,12 @@ return {
 						
 				self.loaded = true
 			end,
+
 			setscreen = function(self,screenh,screenw)
 				self.screenh = screenh
 				self.screenw = screenw
 			end,
+
 			mousepressed = function(self, xl, yl)
 				if self.active == true and self.loaded == true and self.drawn == true then
 				if (xl ~= nil and yl ~= nil) then
@@ -70,7 +75,7 @@ return {
 					end
 					self.items[self.selected][self.selected2]:action()
 					else
-					self.selected2 = (math.floor(xt/((self.screenw-((self.screenx-1)*540)) / self.colums))+1)
+					self.selected2 = (math.floor(xt/((self.screenw-((self.screenx-1)*self.screenw)) / self.colums))+1)
 					self.selected = math.floor((yt-self.y)/self.height)+1
 					if self.selected < 1 then
 						self.selected = 1
@@ -115,8 +120,8 @@ return {
 				end
 				end
 			end
-
 			end,
+
 			isskewed = function(self)
 				self.skewed = true
 			end,
@@ -138,22 +143,30 @@ return {
 
 			updatename = function(self, id, change)
 			self.items[id][1]["name"] = change
-			
-			if self.fontsize then
+
+			if self.items[id][1]["fontsize"] then
+			self.items[id][1]["font"] = love.graphics.newFont(self.items[id][1]["fontsize"])
+			elseif self.fontsize then
 			self.items[id][1]["font"] = love.graphics.newFont(self.fontsize)
 			else
-				self.items[id][1]["font"] = love.graphics.newFont(22)
+			self.items[id][1]["font"] = love.graphics.newFont(22)
 			end
+			
+
 			self.items[id][1]["nameprintable"] = love.graphics.newText(self.items[id][1]["font"],self.items[id][1]["name"])
+
 			end,
+
 			update = function(self, dt)
 				self.animOffset = self.animOffset / (1 + dt*10)
 			end,
+
 			setscreenscale =  function(self, x, y, main)
 				self.screenx = x
 				self.screeny = yg
 				self.screenconst = main
 			end,
+
 			draw = function(self, x, y, w, h, f)
 				if self.active == true then
 				--if self.x ~= then
@@ -178,10 +191,14 @@ return {
 						
 						if item.videoslist ~= nil and item.videoenabled == true then
 							for i, k in ipairs(item.videoslist) do
+
 							if item.videoslist[i]:isPlaying() == false then
+								item.videoslist[i]:pause()
 								item.videoslist[i]:rewind()
 								item.videoslist[i]:play()
+								
 							end
+
 							if item.videolenth == nil then
 							   item.videolenth = item.videoslist[i]:getWidth()*self.videoscalefactor
 							end
@@ -198,7 +215,9 @@ return {
 
 
 				if item.video ~= nil and item.videoenabled == true then
+
 					if item.video:isPlaying() == false then
+					   item.video:pause()
 					   item.video:rewind()
 					   item.video:play()
 				
@@ -250,7 +269,8 @@ return {
 				elseif self.colums == 1 and self.selected then
 				love.graphics.rectangle('line', x, y + height*(self.selected-1) + (self.animOffset * height), width, height)
 				end
-				love.graphics.setNewFont(fontsize)
+				
+				--love.graphics.newFont(fontsize)
 				for h, g in ipairs(self.items) do
 					for i, item in ipairs(self.items[h]) do
 						if self.selected == i then
@@ -264,10 +284,34 @@ return {
 						if item.othernames ~= nil then
 							if item.othernamesprintable == nil then
 								item.othernamesprintable = {}
-								item.font = love.graphics.newFont( fontsize )
+								item.fonts = {}
+								item.fontsizes = {}
+
+								if item.fontsize then
+									item.font = love.graphics.newFont(item.fontsize)
+									self.fontsize = item.fontsize
+									else
+									item.font = love.graphics.newFont(fontsize)
+									item.fontsize = fontsize
+								end
+
 								for i, k in ipairs(item.othernames) do
+
 									item.othernamesprintable[i] = love.graphics.newText(item.font,item.othernames[i])
 								end
+
+								if self.autofitmulti == true then
+								for i, k in ipairs(item.othernamesprintable) do
+									item.fontsizes[i] = item.fontsize
+									item.fonts[i] = item.font
+									while (item.othernamesprintable[i]:getWidth()*(#item.othernamesprintable+2) >= self.screenw) do
+										item.fontsizes[i] = item.fontsizes[i] - 1
+										item.fonts[i] = love.graphics.newFont(item.fontsizes[i])
+										item.othernamesprintable[i] = love.graphics.newText(item.fonts[i],item.othernames[i])
+									end
+								end
+								end
+
 							end
 							
 
@@ -275,17 +319,17 @@ return {
 								if self.screenw ~= nil then
 
 								if self.screenconst == nil then
-								love.graphics.print(item.othernames[k], (( (self.screenw)/(#item.othernames+1)/2) + ((( (self.screenw)/(#item.othernames+1)/2)*2*(k-1))*(1+(1/(#item.othernames-1)))))
+								love.graphics.draw(item.othernamesprintable[k], (( (self.screenw)/(#item.othernames+1)/2) + ((( (self.screenw)/(#item.othernames+1)/2)*2*(k-1))*(1+(1/(#item.othernames-1)))))
 						
 								- (item.othernamesprintable[k]:getWidth()/2)
 								,
-								 y + height*(h-1) + (fontsize/2)-fontsize/4)
+								 y + height*(h-1) + (self.fontsize/2)-self.fontsize/4)
 								else
-								love.graphics.print(item.othernames[k], (( (self.screenw-((self.screenx-1)*540))/(#item.othernames+1)/2) + ((( (self.screenw-((self.screenx-1)*540))/(#item.othernames+1)/2)*2*(k-1))*(1+(1/(#item.othernames-1)))))
+								love.graphics.draw(item.othernamesprintable[k], (( (self.screenw-((self.screenx-1)*540))/(#item.othernames+1)/2) + ((( (self.screenw-((self.screenx-1)*540))/(#item.othernames+1)/2)*2*(k-1))*(1+(1/(#item.othernames-1)))))
 						
 								- (item.othernamesprintable[k]:getWidth()/2)
 								,
-								 y + height*(h-1) + (fontsize/2)-fontsize/4)
+								 y + height*(h-1) + (self.fontsize/2)-self.fontsize/4)
 								end
 								end
 							end
@@ -295,14 +339,28 @@ return {
 						--love.graphics.print(item.name, x + (width/2 - item.name:len()*fontsize/3.9), y + height*(h-1) + (fontsize/2)-fontsize/4)
 						elseif item.name ~=nil then
 						if item.nameprintable == nil then
+							if item.fontsize then
+							item.font = love.graphics.newFont(item.fontsize)
+							self.fontsize = item.fontsize
+							else
 							item.font = love.graphics.newFont(fontsize)
+							item.fontsize = fontsize
+							end
 							item.nameprintable = love.graphics.newText(item.font,item.name)
+
+							if self.autofit == true then
+							while (item.nameprintable:getWidth() >= self.screenw) do
+							item.fontsize = item.fontsize - 1
+							item.font = love.graphics.newFont(item.fontsize)
+							item.nameprintable = love.graphics.newText(item.font,item.name)
+							end
+							end
 						end
 						
 						if item.offsety then
-							love.graphics.print(item.name, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ ((fontsize/2)-fontsize/4)-((item.offsety-1)*self.fontsize) )
+							love.graphics.draw(item.nameprintable, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ ((self.fontsize/2)-self.fontsize/4)-((item.offsety-1)*self.fontsize) )
 						else
-							love.graphics.print(item.name, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ (fontsize/2)-fontsize/4)
+							love.graphics.draw(item.nameprintable, x + (width/2 - (item.nameprintable:getWidth()/2)), y + height*(h-1)+ (self.fontsize/2)-self.fontsize/4)
 						end
 
 					end

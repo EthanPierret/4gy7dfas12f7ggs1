@@ -11,18 +11,19 @@ return {
             objects = {},
             nextnum = 1,
             -- {1,9,10,14},{2,3,4,5,6,7,12,13,19,20,21} {2,3,4,5,6,7,12,13,19,20,21,26}
-            possiblemapids = {{1,9,10,14,23,23,24,24,25,25,27},{2,3,4,5,6,7,12,13,19,20,21,26},{8,11,15,16,17,17,18,22}}, -- 
+            possiblemapids = {{1,9,10,14,23,24,25,27},{2,3,4,5,6,7,12,13,19,20,21,26,29,30,31},{8,11,15,16,17,18,22,28}}, -- 
             --               Ins: 25,24,23,17 Outs: 26,20,19,14,13,12,4 Stayout: 27,22,18,16,15,14,11,10,9,8,1 Stayin: 21,7,6,5,3,2
             possiblexitids = {{4,10},{2,3,5,6,7,8},{1,9}},
             seed,
-            mapscale = 0.285,
+            mapscale = 0.28375,
             eaten = { 0,0 },
             maxheihgt,
             mode = {},
             mapimages={},
             inflations = 0, -- [1] = Maxheight, [2] = Inflate?
             didgameover = false,
-            debug = true,
+            debug = false,
+            didexit = false,
             
             
 
@@ -32,6 +33,16 @@ return {
                 if self.lastmode == 0 then
                     self.lastmode = math.random(1,3)
                 end
+                --
+                self.objects[self.nextnum] = self[1].new()
+                self.objects[self.nextnum+1] = self[1].new()
+                self.objects[self.nextnum]:load(0,90,0,self.mapscale,nil,self.world,1,self.debug)
+                self.objects[self.nextnum+1]:load(0,self.highest-(150*self.mapscale),self.lastmode*-1,self.mapscale,nil,self.world,1,self.debug)
+
+                self.highest = self.highest - (150*self.mapscale)
+
+                self.nextnum = self.nextnum + 2
+                --
 
             end,
 
@@ -56,23 +67,38 @@ return {
                 
                 if caty <= -3000 then
                     inflatecat(3)
-                    self.inflations = self.inflations + 1
+                    self.inflations = 3
                 elseif caty <= -2000 then
                     inflatecat(2)
-                    self.inflations = self.inflations + 1
+                    self.inflations = 2
                 elseif caty <= -1000 then
                     inflatecat(1)
-                    self.inflations = self.inflations + 1
+                    self.inflations = 1
+                end
+
+            end
+
+            if self.mode[1] == "c" and self.didexit ~= true then
+                
+                if caty <= self.maxheihgt + 2400 then
+                    print("making outer")
+                    self.objects[self.nextnum] = self[1].new()
+                    self.highest = self.highest - (150*self.mapscale)
+                    print(self.highest)
+                    self.objects[self.nextnum]:load(0,self.highest,(self.lastmode*-1)-3,self.mapscale,nil,self.world,1,self.debug)
+                    self.didexit = true
+                    self.nextnum = self.nextnum + 1
                 end
 
             end
                 
-            if self.mode[1] == "c" and caty  >= self.maxheihgt + 2500 or self.mode[1] == nil then
+            if self.mode[1] == "c" and caty >= self.maxheihgt + 2500 or self.mode[1] == nil then
                 while caty <= (self.highest + 2500) do
                 -- Load uner by 100 while caty <= (self.highest - 100) do
                 
                 self.objects[self.nextnum] = self[1].new()
-                local r = math.random(1,2)
+                
+                    local r = math.random(1,2)
                 if r == 2 then
                 if self.lastmode == 1 then
                     self.lastmode = 3
@@ -81,23 +107,24 @@ return {
                 end
                 end
                 
+
             
                 local ranid = self.possiblemapids[self.lastmode][math.random(1,#self.possiblemapids[self.lastmode])]
                 
                 self.highest = self.highest - (getmapheight(ranid)* self.mapscale)
                 self.objects[self.nextnum]:load(0,self.highest,ranid,self.mapscale,self.nextnum,self.world,r,self.debug)
                 self.eaten[2] = self.eaten[2] + self.objects[self.nextnum].food
-                print(self.lastmode.."    "..ranid)
+                
         
                 self.lastmode = self.objects[self.nextnum].exit
-                print(self.lastmode.."    "..ranid)
-                print(self.objects[self.nextnum].enter)
+               
                 self.nextnum = self.nextnum + 1
                 end
+
                 elseif self.mode[1] == "c" and caty <= self.highest - 50 and self.didgameover == false then
                 triggerlightgameover(self.catid)
                 self.didgameover = true
-            end
+                end
             
             for i,j in ipairs(self.objects) do
              

@@ -152,12 +152,15 @@ new = function()
     inflate = function(self,size)
       self.scalefactor = self.scalefactor * ((self.rad+size)/self.rad)
       self.p.inflation[self.inflations+1] = love.physics.newCircleShape(self.rad+size)
+
       self.rad = self.rad + size
+
       self.p.inflation[self.inflations+2] = love.physics.newFixture(self.p.body, self.p.inflation[self.inflations+1], 1) 
       self.p.inflation[self.inflations+2]:setMask(4)
       self.p.inflation[self.inflations+2]:setRestitution(0.2)
       self.p.inflation[self.inflations+2]:setGroupIndex(-2)
       self.p.inflation[self.inflations+2]:setUserData(self.id)
+      --print("Inflation: "..self.inflations+2)
 
       self.p.rects = love.physics.newRectangleShape( ((self.rad-5)/2)*-1,self.rad*-1/1.5,self.rad-5,self.rad,0 ) --(offsetX,offsetY,Width,Height,Angle) 
       self.p.rectp = love.physics.newFixture(self.p.body, self.p.rects, 0)
@@ -168,7 +171,7 @@ new = function()
       self.p.body:setMass(self.mass)
       
 
-      self.inflations = self.inflations + 4
+      self.inflations = self.inflations + 2
       
     end,
     

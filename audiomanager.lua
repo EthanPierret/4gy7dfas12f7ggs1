@@ -94,8 +94,6 @@ return{
             self.storage[5][2] = love.audio.newSource("assets/audio/bgm.ogg","stream")
             self.storage[5][3] = love.audio.newSource("assets/audio/bgm.ogg","stream")
             self.storage[5][4] = love.audio.newSource("assets/audio/bgm.ogg","stream")
-
-
         
         end
 
@@ -131,6 +129,7 @@ return{
             self.storage["sfx"]["high"][4] = love.audio.newSource("assets/audio/cats/High4.wav","stream")
 
         end,
+
         playsfx = function(self,id,volume)
             if volume ~= nil then
                 self.storage["sfx"][id]:setVolumeLimits(0,volume)
@@ -161,18 +160,23 @@ return{
                 if self.expiresfx ~= nil then
                     self.expiresfx:pause()
                     end
-            if play == false and self.song:isPlaying() then
+            if play == false then
+                if self.song:isPlaying() then
                 self.song:pause()
                 if self.sfx ~= nil then
                 self.sfx:pause()
+                end
                 end
 
                 self.playing = false
                 self.onoff = false
             end
 
-            if play == true and self.song:isPlaying() == false then
+            if play == true then
+                
+                if self.song:isPlaying() == false then
                 self.song:play()
+                end
 
                 self.playing = true
                 self.onoff = true
@@ -190,6 +194,7 @@ return{
             elseif self.storage[self.id] ~= nil then
                 self.song = self.storage[self.id][1]
             end
+
             for i, k in ipairs(self.storage) do
                 if i ~= id then
                     self.storage[i] = nil
@@ -253,7 +258,7 @@ return{
 
                 if self.playing == false then
                 self.song = self.storage[id][r]
-                self.storage[id][r]:play()
+                self.song:play()
                 self.playing = true
                 end
             end 

@@ -38,11 +38,7 @@ lightgameover = function()
     end,
 
     checkplay = function(self)
-        if self.sound:isPlaying() == false then
-            return false
-        else
-            return true
-        end
+      return self.timer
     end,
 
     draw = function(self, caty)
