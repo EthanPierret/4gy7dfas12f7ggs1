@@ -15,13 +15,13 @@ return{
             sfx=nil,
             expiresfx=nil,
             onoff = true,
+            musicswitch = nil,
 
-        load = function(self, songid, volume, pitch)
-            if songid == 1 then
-                self.song = love.audio.newSource("assets/bgm.mp3","stream")
-                self.song:setVolume(volume)
-                self.song:setPitch(pitch)
-            end
+        load = function(self, volume, pitch, switch)
+            self.pitch = pitch
+            self.volume = volume
+            self.musicswitch = switch
+
         end,
 
         overlapsfx = function(self, sfx, vol)
@@ -38,12 +38,16 @@ return{
 
             else
 
+            if musicswitch == true then
             if self.song then
                 self.song:play()
             end
+            end
+
             self.expiresfx:pause()
             self.onoff = true
             self.playing = true
+
             end
             
         end,
@@ -170,6 +174,7 @@ return{
 
                 self.playing = false
                 self.onoff = false
+                self.musicswitch = false
             end
 
             if play == true then
@@ -180,6 +185,7 @@ return{
 
                 self.playing = true
                 self.onoff = true
+                self.musicswitch = true
             end
         elseif self.storage[self.id] ~= nil then
             self.song = self.storage[self.id][1]
@@ -212,30 +218,31 @@ return{
             end
         end
         end,
+
         update = function(self)
-            if self.onoff == true then
+        if self.onoff == true then
             if self.timer > 1 then
                 self.timer = 0
                 if self.song ~= nil then
-                    if self.song:isPlaying() == false and self.playing == true then
+                    if self.song:isPlaying() == false then
 
-                local r = math.random(1,#self.storage[self.id])
+                        if self.playing == true and self.musicswitch = true then
+                        local r = math.random(1,#self.storage[self.id])
                         self.song:stop()
                         self.song = self.storage[self.id][r]
                         self.song:setVolumeLimits(0,self.volume)
                         self.song:setVolume(self.volume)
                         self.song:play()
-                        self.playing = true
+                        end
                         
 
                     end
-                else
                 --self:updatelist(self.id)
                 end
             else
             self.timer = self.timer + 0.016
+            end
         end
-    end
         end,
 
         setseed = function(self,seed)
@@ -244,6 +251,7 @@ return{
         end,
 
         playlist = function(self,id, pitch)
+            if self.musicswitch == true then
             local len = #self.storage[id]
             self.id = id
             if self.expiresfx ~= nil then
@@ -261,13 +269,15 @@ return{
                 self.song:play()
                 self.playing = true
                 end
-            end 
+            end
+            end
 
         end,
 
             play = function(self)
+                if self.musicswitch == true then
                 self.song:play()
-
+                end
 
 
 

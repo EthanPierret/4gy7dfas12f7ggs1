@@ -22,7 +22,7 @@ return {
             mapimages={},
             inflations = 0, -- [1] = Maxheight, [2] = Inflate?
             didgameover = false,
-            debug = false,
+            debug = true,
             didexit = false,
             
             

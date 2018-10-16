@@ -13,9 +13,9 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
     self.height = nil
 
     if type == 1 then
-      self.image = love.graphics.newImage("assets/pear.png")
+      self.image = love.graphics.newImage("assets/melon.png")
     elseif type == 2 then
-      self.image = love.graphics.newImage("assets/SpikePear.png")
+      self.image = love.graphics.newImage("assets/spikepear.png")
     end
 
     self.width = self.image:getWidth()
@@ -47,6 +47,10 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
 
   self.body:setGravityScale(0)
 
+  self.x = self.body:getX()
+  self.y = self.body:getY()
+  self.angle = self.body:getAngle()
+
 
   self.destroy = function ()
     self.body:release()
@@ -60,8 +64,8 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
     --if self.body then
     if self.group == -4 then
       
-    love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
-        self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
+    love.graphics.draw(self.image,(self.x),(self.y-5),
+        self.angle,0.15,0.15,self.width/2,self.height/2)
         --love.graphics.setColor(0,0,0,255)
         --love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.rad)
         --love.graphics.setColor(128,128,128,255)
@@ -69,8 +73,8 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
 
     elseif self.group == -6 then
 
-      love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
-        self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
+      love.graphics.draw(self.image,(self.x),(self.y-10),
+        self.angle,0.10,0.10,self.width/2,self.height/2)
 
     end
 
@@ -80,9 +84,14 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
   self.debugdraw = function ()
 
     if self.group == -4 then
+      love.graphics.draw(self.image,(self.x-0.25),(self.y-3),
+      self.angle,0.19,0.19,self.width/2,self.height/2)
+      --[[
+      love.graphics.draw(self.image,(self.x-0.25),(self.y-3),
+      self.angle,0.195,0.195,self.width/2,self.height/2)
+
+      ]]--
       
-      love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
-          self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
           love.graphics.setColor(0,0,0,255)
           love.graphics.circle("line", self.body:getX(), self.body:getY(), self.rad)
           love.graphics.setColor(128,128,128,255)
@@ -90,8 +99,9 @@ food.new = function(x, y, rad, physics, usserdata, usserdata2, type)
   
       elseif self.group == -6 then
 
-        love.graphics.draw(self.image,(self.body:getX()),(self.body:getY()),
-          self.body:getAngle(),0.05,0.05,self.width/2,self.height/2)
+        love.graphics.draw(self.image,(self.x-1),(self.y-7.5),
+        self.angle,0.09,0.09,self.width/2,self.height/2)
+
           love.graphics.setColor(0,0,0,255)
           love.graphics.circle("line", self.body:getX(), self.body:getY(), self.rad)
           love.graphics.setColor(128,128,128,255)

@@ -55,7 +55,7 @@ local catsimage
 local lightgameoverevent = require("lightgameover")
 local gameoverevent = nil
 local gameovermultiplier
-local bgimage = love.graphics.newImage("assets/bg.jpg")
+local bgimage = love.graphics.newImage("assets/sky.jpg")
 
 local loaded = false
 
@@ -126,7 +126,8 @@ love.graphics.newVideo(love.video.newVideoStream("assets/Starlight.ogv")),}
 
 
 
-local bgvideo = love.graphics.newVideo(love.video.newVideoStream("assets/Blusie.ogv"))
+local bgvideo = love.graphics.newVideo(love.video.newVideoStream("assets/ogvcloudvideo.ogv"))
+local bgvideo2 = love.graphics.newVideo(love.video.newVideoStream("assets/Blusie.ogv"))
 local dobgvideo = true
 
 
@@ -241,26 +242,6 @@ function love.mousepressed(x, y, button, touch)
 
 
   clostestmouseX = x
-  
-    if gameactive == true then
-    --[[
-    if maincat.catslist[1] ~= nil and gameover == false then
-    
-    if (x > gamecats[1].catslist[1].p.body:getX()) then
-      nomouse = false
-      gamecats[1].catslist[1].p.body:applyLinearImpulse(5,0)
-      gamecats[1].catslist[1].p.body:applyAngularImpulse(2)
-      holding = 1
-    else
-      nomouse = false
-      gamecats[1].catslist[1].p.body:applyLinearImpulse(-5,0)
-      gamecats[1].catslist[1].p.body:applyTorque(-2)
-      holding = 2
-    end
-  end
-  ]]--
-  
-end
 
   if gamestate == 6 then
     gameovermenu:mousepressed(x,y)
@@ -270,11 +251,11 @@ end
 
   elseif gamestate == 1 then
     optionmenu:mousepressed(x,y)
-  elseif gamestate == 4 then
+  elseif gamestate == 2 then
     musicmenu:mousepressed(x,y)
   elseif gamestate == 3 then
     creditsmenu:mousepressed(x,y)
-  elseif gamestate == 2 then
+  elseif gamestate == 4 then
     catsmenu:mousepressed(x,y)
   elseif gamestate == 0 then
     mainmenu:mousepressed(x,y)
@@ -306,13 +287,13 @@ function love.keypressed(key)
   elseif gamestate == 1 then
     optionmenu:keypressed(key)
 
-  elseif gamestate == 2 then
+  elseif gamestate == 4 then
     catsmenu:keypressed(key)
 
   elseif gamestate == 3 then
     creditsmenu:keypressed(key)
 
-  elseif gamestate == 4 then
+  elseif gamestate == 2 then
     musicmenu:keypressed(key)
 
   elseif gamestate == 6 then
@@ -339,6 +320,12 @@ function loopbgvideo()
     bgvideo:play()
   end
 
+  if bgvideo2:isPlaying() == false then
+    bgvideo2:pause()
+    bgvideo2:rewind()
+    bgvideo2:play()
+  end
+
 end
 
 
@@ -358,14 +345,19 @@ function love.draw()
   love.graphics.translate( ((540/2)*((scalex/scalefactor)-1)),0 ) --((scalex/scalefactor)*540)-540 love.graphics.getWidth( )
   
 
-  if gamestate < 5 then
-  if savedata["story"] == 3 and dobgvideo == true then
+  if gamestate < 4 then
+    
     love.graphics.setColor(128,128,128,255)
-    loopbgvideo()
-    love.graphics.draw(bgvideo,0,0,0,1,1,0,0)
-  else
 
+  if dobgvideo == true then
+    
+    loopbgvideo()
+    love.graphics.draw(bgvideo,0,0,0,0.54,0.54,0,0)
+    love.graphics.draw(bgvideo2,halfw-200,halfh*2-200,math.rad(-30),0.5,0.5)
+  else
+    love.graphics.draw(bgimage,0, -4770 ,0,540/500,540/500,0,0) -- 5662.5 max     (540/500)
   end
+
   end
 
 
@@ -382,13 +374,17 @@ function love.draw()
   
   
   --[[love.graphics.setColor(0,0,0,255)]]--
+  if gamestate < 21 then
   if gameover == false and gamestate < 20 then
     caty = gamecats[1].catslist[1].p.body:getY()
     followcat(caty,1,halfw,halfh)
-  elseif gamestate >= 5 and gameover == true then
+  elseif gameover == true then
     --setcampos(gameoverstorage["catx"]-halfw,gameoverstorage["caty"]-halfh)
-    setcampos(0,gameoverstorage["caty"]-(halfh*savedata["cameraoffsetmultiplier"]))
+    setcampos(0, gameoverstorage["y"]) -- gameoverstorage["caty"]-(halfh*savedata["cameraoffsetmultiplier"])
+  elseif lightgameoveractive == true then
+    setcampos(0, gameoverstorage["y"])
   end
+end
   
   
 
@@ -415,6 +411,7 @@ function love.draw()
         gamestate = 21
         if gameoverevent:checkplay() >= 30 then
         lightgameoverdone = true
+        lightgameoveractive = true
         end
       end
       
@@ -424,13 +421,20 @@ end
 
 
   if gamestate < 20 then
+
+  
+
+
+
+
     love.graphics.setColor(128,128,128,255)
-    
-    if caty >= -20712.5 then
-      love.graphics.draw(bgimage,0,caty - ( (5800) + (caty / 4)),0,1.25,1.25,0,0) -- /5 = -25875 /4 = -20712.5 w/ 5800
-    --love.graphics.draw(bgimage,0,caty - ( (5900) + (caty / 5)),0,1.25,1.25,0,0) -- /10 = starynight at ~40,000
+    -- (((halfh*2) * 0.75) )
+    if caty >= -23182.5 then -- 5243
+      love.graphics.draw(bgimage,0,caty - (((5662.44)+(caty/5))-259.2-108+32.5),0,540/500,540/500,0,0) -- /5 = -25875 /4 = -20712.5 w/ 5800    + (caty / 4)
+    --love.graphics.draw(bgimage,0,caty - ( (5900) + (caty / 5)),0,1.25,1.25,0,0) -- /10 = starynight at ~40,000  *(540/500)
+    -- ( ((5662.44) + (caty / 4))-259.2-108) 20972        ( ((5662.44) + (caty/ 4))-259.2-108) /4 = -18420 caty
     else
-    love.graphics.draw(bgimage,0,caty - ( (5800) + (-20712.5 / 5)),0,1.25,1.25,0,0)
+    love.graphics.draw(bgimage,0,caty - 691.24,0,540/500,540/500,0,0) -- Base 5243, 5243 * (540/500) = 5662.44
     end
 
   if gamestate == 5 then
@@ -462,9 +466,7 @@ end
   if math.floor(gameoverstorage["caty"]*-1) >= 0 then
     savedata["height"] = savedata["height"] + math.floor(gameoverstorage["caty"]*-1)
   end
-
-  dobgvideo = true
-  lightgameoveractive = false
+  
   checkforunlock(curscore)
 elseif lightgameoverdone == false then
    gameoverevent:draw(gamecats[1].catslist[1].p.body:getY())
@@ -486,7 +488,8 @@ elseif lightgameoverdone == false then
   end
 end
   
- 
+
+
   if gamestate == 6 then
 
   local t, y = getposcam()
@@ -494,8 +497,9 @@ end
   
 
   elseif gamestate == 20 then
-
+    
   local i, o = getposcam()--gameoverstorage["x"]
+  print(i.."      "..o)
   unlockmenu:draw((halfw/scalex)+i-100/2,halfh+o-(#unlockmenu.items*100/2),100,100,22)
   
 
@@ -505,13 +509,13 @@ end
     optionmenu:draw((halfw/scalex)-menuw/2,halfh-(#optionmenu.items*menuh/2),menuw,menuh,22)
 
 
-  elseif gamestate == 4 then
+  elseif gamestate == 2 then
     musicmenu:draw((halfw/scalex)-menuw/2,halfh-(#musicmenu.items*menuh/2),menuw,menuh,22)
 
   elseif gamestate == 3 then
     creditsmenu:draw((halfw/scalex)-menuw/2,halfh-(#creditsmenu.items*menuh/2),menuw,menuh,22)
 
-  elseif gamestate == 2 then
+  elseif gamestate == 4 then
     catsmenu:draw(((halfw)-100/2)-(halfw/scalex),halfh-(#catsmenu.items*100/2),100,100,22)
     descriptionmenu:draw((halfw/scalex)-100/2,halfh-50-(#catsmenu.items*100/2),100,100,17)
     
@@ -601,7 +605,6 @@ function love.update(dt)
   if gameactive == true then
       if randomseed == 0 then
       randomseed = elapsed
-      --mainmap:setseed(randomseed)
       end
 
       if gameoverevent ~= nil then
@@ -611,6 +614,8 @@ function love.update(dt)
       end
 
     if gamestate == 5 then
+
+      mainmap:update(maincat:gety())
 
       if love.mouse.isDown(1) then
         movecat(0)
@@ -633,7 +638,7 @@ function love.update(dt)
     
     
   
-
+    --[[
   if catmode ~= 0 then
   elseif catmode == 1 then
     maincat:eat()
@@ -642,14 +647,12 @@ function love.update(dt)
     maincat:anim()
     catmode = 0
   end
+  ]]--
   
   world:update(dt)
   
 
   --mainmap update
-  if gamestate == 5 then
-  mainmap:update(maincat:gety())
-  end
   
   
   
@@ -678,11 +681,11 @@ end
   --game.maincat:release() does not have object references set up, only global. maincat.p.prop:destroy() works.
   elseif gamestate == 1 then
   optionmenu:update(dt)
-  elseif gamestate == 4 then
+  elseif gamestate == 2 then
   musicmenu:update(dt)
   elseif gamestate == 3 then
   creditsmenu:update(dt)
-  elseif gamestate == 2 then
+  elseif gamestate == 4 then
   catsmenu:update(dt)
   elseif gamestate == 0 then
   mainmenu:update(dt)
@@ -773,6 +776,9 @@ function loadgame()
     
   
     gamemusic:updatevolume(savedata["musicvolume"]/10)
+    
+    
+    
   end 
 
 
@@ -785,7 +791,10 @@ function loadgame()
     end
 
     if savedata["musicswitch"] == "On" then
+      gamemusic:load(savedata["musicvolume"]/10,1,true)
     makemusic()
+    else
+      gamemusic:load(savedata["musicvolume"]/10,1,false)
     end
    -- table.save(savedata,"save.lua")
 
@@ -800,13 +809,13 @@ function loadgame()
   if gamemode == 1 then
   mainmap.mode[1] = "c" -- Limit the generation to a max of around -3000.
   if savedata["story"] == 0 then
-  mainmap.maxheihgt = -3000
+  mainmap.maxheihgt = -30
   elseif savedata["story"] == 1 then
-  mainmap.maxheihgt = -5000
+  mainmap.maxheihgt = -50
   elseif savedata["story"] == 2 then
-  mainmap.maxheihgt = -7500
+  mainmap.maxheihgt = -75
   elseif savedata["story"] == 3 then
-  mainmap.maxheihgt = -10000
+  mainmap.maxheihgt = -100
   end
   end
 
@@ -1141,7 +1150,7 @@ function beginContact(a, b, coll)
   
   if gameover == false then
   if begincollision(a,b,coll) == "food" then
-  catmode = 1
+  --maincat:eat()
   curscore = curscore + 25
   if savedata["food"] == nil then
     savedata["food"] = 1
@@ -1200,10 +1209,12 @@ end
 
 --DogameOver
 function dogameover(id)
+
   if gameover == false then
   triggergameover(maincat, world, id, gamemusic, gameoverstorage)
   gameover = true
   end
+
   height = math.floor(maincat:gety())
   -- Update total height
   if math.floor(gameoverstorage["caty"]*-1) >= 0 then
@@ -1297,7 +1308,7 @@ function checkforunlock(score)
     savedata["unlockedcats"][7] = 1
   end
 
-  if savedata["story"] == 3 and gameoverstorage["caty"] <= -10000 and savedata["unlockedcats"][8] == nil then
+  if savedata["story"] == 3 and lightgameoverdone == true and savedata["unlockedcats"][8] == nil then
     table.insert(l, 8)
     savedata["unlockedcats"][8] = 1
   end
@@ -1341,9 +1352,14 @@ function gamecleanup()
   print("Cleaning Game")
   
   -- If "won the game" then play victory music. Load bg video here?
-  if savedata["story"] == 3 and gameoverevent ~= nil then
+  if savedata["story"] == 3 then
+
+  if gameoverevent ~= nil then
   gamemusic.song = love.audio.newSource("assets/audio/bgm.ogg","stream")
   gamemusic:startstop(true)
+  dobgvideo = true
+  end
+
   end
 
   curscore = 0
@@ -1373,7 +1389,6 @@ end
 function inflatecat(id)
   if inflated < id then
     print("Inflating with:"..id)
-    local r = 9
   if id == 1 then
     --maincat:inflate(5/r)
     maincat:inflate(0.5)
@@ -1532,7 +1547,7 @@ end
 
 -- Music Menu
 function makemusicmenu()
-  gamestate = 4
+  gamestate = 2
   if musicmenu == nil then
   musicmenu = menu.new()
   musicmenu:setscreen(halfh*2,halfw*2)
@@ -1787,7 +1802,7 @@ end
 
 
 function makecatsmenu()
-  gamestate = 2
+  gamestate = 4
   if catsmenu == nil then
     --catsimage = catsmenumanager.new(halfh,halfw)
     --catsimage:print()
@@ -2020,7 +2035,7 @@ function makecatsmenu()
     catsmenu.active = true
   end
 
-  catsmenuactive = true
+ 
   
   makedescriptionmenu(savedata["cat"])
   
@@ -2069,12 +2084,14 @@ end
 
 function makeunlockmenu(id)
   gamestate = 20
-  if unlockmenu == nil then
+  
     
     print("Making Unlock Menu")
   unlockmenu = menu.new()
+  
   unlockmenu:isskewed()
   unlockmenu:setoffs(gameoverstorage["x"],gameoverstorage["y"])
+  
   unlockmenu:setscreen(halfh*2,halfw*2)
   unlockmenu:setscreenscale(scalex,scaley,scalefactor)
   
@@ -2089,7 +2106,7 @@ function makeunlockmenu(id)
     l = l..catnames[r]
     end
 
-    if string.len(l) >= 30 * indindentions then
+    while string.len(l) >= 30 * indindentions do
       l = l.."\n"
       indindentions = indindentions + 1
     end
@@ -2142,11 +2159,7 @@ function makeunlockmenu(id)
         
 
       unlockmenu:load()
-      else
-      unlockmenu.active = true
-      print("EnablingUnlockMenu...")
-      end
-    unlockmenuactive = true
-    gameovermenuactive = false
+      
+    
 
 end
